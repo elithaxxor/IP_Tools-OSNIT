@@ -623,6 +623,7 @@ else:
 
 try:
     print('X'*50)
+    arp_scan()
     pprint.pprint(ACTIVE_NETWORKS)
     print(f'{yellow}**[ACTIVE_NETWORKS]\n{ACTIVE_NETWORKS}')
     print('X'*50)
