@@ -325,9 +325,6 @@ def arp_scan():
             print(f'{red}ERROR IN TCP PARSE{reset}')
 
 
-
-
-
     except KeyError as exkey:
         traceback.print_exc()
         print("[!] Cannot scan host!: " , exkey)
@@ -414,9 +411,6 @@ def arp_scan():
         except Exception as e:
             traceback.print_exc()
             print(f"{red}**ERROR IN NMAP SCAN[{port}]{reset}.\n[{e}]")
-
-
-
 
 
 
@@ -609,6 +603,7 @@ try:
                 # to get current directory
                 directory = os.getcwd()
                 backup = pathlib.PurePath('/backup/')
+                time.sleep(2)
                 if backup not in os.walk(directory):
                     try:
 
@@ -616,12 +611,14 @@ try:
                         timestamp = datetime.now()
                         shutil.move(f, directory + "/backup/" + str(timestamp) + '-' + f)
                         print(f'**{yellow}**Created backup file in:{reset} \n[{directory + backup}]')
+                        time.sleep(1)
                         break
                     except:
                         print(f'{red}**Folder already exists{reset}')
                         break
                 else:
                     print(f'**{red}.csv found in directory. moving it to backup folder. {reset}')
+                    time.sleep(2)
                     break
 except IOError as e:
     traceback.print_exc()
@@ -666,7 +663,7 @@ else:
                         current_clock = ctime(current_time)
                         directory = os.getcwd()
                         print(f'{red}**Did not find a directory, searching for one.. {reset}')
-                        print(f'{yellow}*Refer to {directory} && {backup_loc} for reference {reset} \n*{current_clock}')
+                        print(f'{yellow}*Refer to {directory} && {cwd} for reference {reset} \n*{current_clock}')
                         file = open('attack.csv', 'w')
                         if os.path.isfile(file):
                             print(f'{yellow}**Created attack.csv in:{reset} \n {cwd}')
@@ -735,19 +732,21 @@ try:
             print(f'**{yellow}**[DISCOVERED AP]** {reset}')
 
         ##########################################################################
-        for file00 in os.listdir(cwd):
-            if 'attack.csv' in file00:
-                pass
-            if "attack.csv" not in file00:
-                print(f'{red}** Did not find a old .csv , searching for one.. {reset}')
+        for root, dirs, file  in os.walk(cwd):
+            if 'attack.csv' in file:
+                print(f'{yellow}**Found [attack.csv] in directory, moving on.. ')
+                time.sleep(1)
+                break
+            elif "attack.csv" not in file:
+                print(f'{red}** Did not file a old .csv , searching for one.. {reset}')
                 csv_loc = cwd + 'attack.csv'
                 file00 = open('attack.csv', 'w')
                 if file00:
                     print(f'{yellow}**The .csv is in: {reset} \n*{csv_loc}')
-
                     time.sleep(1)
                     file00.close()
-                    pass
+                    break
+
 
         with 'attack.csv' in os.listdir(cwd) as csv_h:
             for index, result in enumerate(nic):
