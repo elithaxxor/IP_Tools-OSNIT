@@ -358,6 +358,7 @@ try:
                 backup = pathlib.PurePath('/backup/')
                 if backup not in os.walk(directory):
                     try:
+                        
                         os.mkdir(directory + "/backup/")
                         timestamp = datetime.now()
                         shutil.move(f, directory + "/backup/" + str(timestamp) + '-' + f)
@@ -400,16 +401,17 @@ else:
                         print(f'{red}**Did not find a directory, searching for one.. {reset}')
                         csv_loc = directory + '/attack.csv'
                         os.mkdir(csv_loc)
+\
                         print(f'{yellow}**The .csv was created in: {reset} \n*{csv_loc}')
-                        file = open(csv_loc, 'a')
+                        file = open('attack.csv, 'w')
 
-                        if file:
-                            print(f'{yellow}**Created attack.csv in:{reset} \n {csv_loc}')
+                        if os.path.isfile(file):
+                            print(f'{yellow}**Created attack.csv in:{reset} \n {cwd}')
                             time.sleep(1)
                             signal = False
                             pass
 
-  #  except Exception as e:
+  #  except Exception as e:s
     except:
         traceback.print_exc()
         print(f'{red}**Error, must have input{reset}')
