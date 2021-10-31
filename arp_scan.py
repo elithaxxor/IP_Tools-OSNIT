@@ -189,10 +189,6 @@ def arp_scan():
         except:
             print(f'{red}ERROR IN TCP PARSE{reset}')
 
-
-
-
-
     except KeyError as exkey:
         traceback.print_exc()
         print("[!] Cannot scan host!: " , exkey)
