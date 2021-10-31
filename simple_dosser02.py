@@ -1,5 +1,5 @@
 import subprocess, re, csv, os, time, shutil, sys, getpass, traceback, platform, time, threading, pprint
-import pathlib, nmap
+import pathlib, nmap, csv 
 from datetime import datetime
 from subprocess import Popen, call, PIPE
 import IPCHECKER as IPx
