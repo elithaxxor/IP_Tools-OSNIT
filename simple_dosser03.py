@@ -1,8 +1,7 @@
-## check interface information 
+## check interface information
 # check AP's
-# port scan or arp scan 
-# airmon 
-
+# port scan or arp scan
+# airmon
 import subprocess, re, csv, os, time, shutil, sys, getpass, traceback, platform, time, threading, pprint
 import pathlib, nmap
 from datetime import datetime
@@ -18,7 +17,6 @@ from typing import Pattern, Match
 import nmcli
 
 from os import devnull
-
 
 class Spinner:
     busy = False
@@ -116,6 +114,65 @@ reset = color.reset
 ############
 
 
+class Colors:
+    reset = "\033[0m"
+
+    # Black
+    fgBlack = "\033[30m"
+    fgBrightBlack = "\033[30;1m"
+    bgBlack = "\033[40m"
+    bgBrightBlack = "\033[40;1m"
+
+    # Red
+    fgRed = "\033[31m"
+    fgBrightRed = "\033[31;1m"
+    bgRed = "\033[41m"
+    bgBrightRed = "\033[41;1m"
+
+    # Green
+    fgGreen = "\033[32m"
+    fgBrightGreen = "\033[32;1m"
+    bgGreen = "\033[42m"
+    bgBrightGreen = "\033[42;1m"
+
+    # Yellow
+    fgYellow = "\033[33m"
+    fgBrightYellow = "\033[33;1m"
+    bgYellow = "\033[43m"
+    bgBrightYellow = "\033[43;1m"
+
+    # Blue
+    fgBlue = "\033[34m"
+    fgBrightBlue = "\033[34;1m"
+    bgBlue = "\033[44m"
+    bgBrightBlue = "\033[44;1m"
+    # Magenta
+    fgMagenta = "\033[35m"
+    fgBrightMagenta = "\033[35;1m"
+    bgMagenta = "\033[45m"
+    bgBrightMagenta = "\033[45;1m"
+    # Cyan
+    fgCyan = "\033[36m"
+    fgBrightCyan = "\033[36;1m"
+    bgCyan = "\033[46m"
+    bgBrightCyan = "\033[46;1m"
+    # White
+    fgWhite = "\033[37m"
+    fgBrightWhite = "\033[37;1m"
+    bgWhite = "\033[47m"
+    bgBrightWhite = "\033[47;1m"
+
+
+###########
+color = Colors()
+yellow = color.fgYellow
+red = color.fgRed
+blue = color.fgBlue
+bblue = color.fgBrightBlue
+cyan = color.fgCyan
+bg_background = color.bgBlack
+reset = color.reset
+
 def display_header():
     # print('*' * 75)
     color_red = Colors()
@@ -174,42 +231,6 @@ def clear():
     _ = call('clear' if os_name == 'Linux' or 'Windows' or 'Darwin' else 'cls')
 
 
-def install():
-    try:
-        sucessfull_install = []
-        subprocess.check_call([sys.executable, "-m", "pip", "install", threading])
-        if subprocess.check_call:
-            print(f'{yellow} Sucessfully Installed PIP')
-            sucessfull_install.append('pip')
-        subprocess.check_call([sys.executable, "-m", "tqdm", "install", tqdm])
-        if subprocess.check_call:
-            print(f'{yellow} Sucessfully Installed TQDM')
-            sucessfull_install.append('TQDM')
-        subprocess.check_call([sys.executable, "-m", "pip", "datetime", datetime])
-        if subprocess.check_call:
-            print(f'{yellow} Sucessfully Installed datetime')
-            sucessfull_install.append('datetime')
-        subprocess.check_call([sys.executable, "-m", "pip", "net-tools", net - tools])
-        if subprocess.check_call:
-            print(f'{yellow} Sucessfully Installed datetime')
-            sucessfull_install.append('net-tools')
-        subprocess.check_call([sys.executable, "-m", "apt install", "airmon-ng", airmon - ng])
-        if subprocess.check_call:
-            print(f'{yellow} Sucessfully Installed airmon-ng')
-            sucessfull_install.append('airmong-ng')
-        print(f'{yellow}**Installed Dependencies {reset}\n{sucessfull_install}')
-
-    except subprocess.CalledPssrocessError as sub0:
-        traceback.print_exc()
-        print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub0)}')
-    except subprocess.TimeoutExpired as sub1:
-        traceback.print_exc()
-        print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub1)}')
-    except subprocess.SubprocessError as sub2:
-        traceback.print_exc()
-        print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub2)}')
-
-
 
 
 ACTIVE_NETWORKS = []
@@ -219,7 +240,7 @@ import nmap, re, traceback
 from typing import Pattern, Match
 
 
-class Scan:
+class ARPscan: ## arp scanner -
     def arp(self, ip):
         self.ip = ip
         print(ip)
@@ -229,7 +250,6 @@ class Scan:
         answered, unanswered = scapy.srp(request, timeout=1)
         answered00, unanswered00 = srp(Ether(dst="FF:FF:FF:FF:FF:FF") / ARP(pdst=ip), timeout=1, iface='wlp1s0',
                                        inter=0.1)
-
         print('\tIP\t\t\t\t\tMAC')
         print('_' * 37)
         for i in answered:
@@ -447,65 +467,6 @@ class Scan:
                 print(f"{red}**ERROR IN NMAP SCAN[{port}]{reset}.\n[{e}]")
 
 
-class Colors:
-    reset = "\033[0m"
-
-    # Black
-    fgBlack = "\033[30m"
-    fgBrightBlack = "\033[30;1m"
-    bgBlack = "\033[40m"
-    bgBrightBlack = "\033[40;1m"
-
-    # Red
-    fgRed = "\033[31m"
-    fgBrightRed = "\033[31;1m"
-    bgRed = "\033[41m"
-    bgBrightRed = "\033[41;1m"
-
-    # Green
-    fgGreen = "\033[32m"
-    fgBrightGreen = "\033[32;1m"
-    bgGreen = "\033[42m"
-    bgBrightGreen = "\033[42;1m"
-
-    # Yellow
-    fgYellow = "\033[33m"
-    fgBrightYellow = "\033[33;1m"
-    bgYellow = "\033[43m"
-    bgBrightYellow = "\033[43;1m"
-
-    # Blue
-    fgBlue = "\033[34m"
-    fgBrightBlue = "\033[34;1m"
-    bgBlue = "\033[44m"
-    bgBrightBlue = "\033[44;1m"
-    # Magenta
-    fgMagenta = "\033[35m"
-    fgBrightMagenta = "\033[35;1m"
-    bgMagenta = "\033[45m"
-    bgBrightMagenta = "\033[45;1m"
-    # Cyan
-    fgCyan = "\033[36m"
-    fgBrightCyan = "\033[36;1m"
-    bgCyan = "\033[46m"
-    bgBrightCyan = "\033[46;1m"
-    # White
-    fgWhite = "\033[37m"
-    fgBrightWhite = "\033[37;1m"
-    bgWhite = "\033[47m"
-    bgBrightWhite = "\033[47;1m"
-
-
-###########
-color = Colors()
-yellow = color.fgYellow
-red = color.fgRed
-blue = color.fgBlue
-bblue = color.fgBrightBlue
-cyan = color.fgCyan
-bg_background = color.bgBlack
-reset = color.reset
-
 
 
 
@@ -519,26 +480,84 @@ reset = color.reset
 import shlex
 ## nmcli check
 
-class CHECK_NIC():
+class CheckInfo():
     def __init__(self):
-        super(CHECK_NIC, self).__init__()
+        super(CheckInfo, self).__init__()
         self.nmcli = nmcli
 
-    def available_nics(self):
-        print(f'{yellow} Available  NICS  {reset}')
-        with open("NIC_INFO.txt", 'a') as f:
-            output01 = subprocess.run(["sudo", "lsusb", "-f",], stdin=f,
-                                    capture_output=True, text=True, check=True)
-            print(output01)
 
-            output02 = subprocess.run(["sudo", "lshw", "-f", "-C", "network" "-short" ], stdin=f,
-                                    capture_output=True, text=True, check=True)
-            print(output02)
-            f.close()
+    @staticmethod
+    def install():
+        try:
+            sucessfull_install = []
+            subprocess.check_call([sys.executable, "-m", "pip", "install", threading])
+            if subprocess.check_call:
+                print(f'{yellow} Sucessfully Installed PIP')
+                sucessfull_install.append('pip')
+            subprocess.check_call([sys.executable, "-m", "tqdm", "install", tqdm])
+            if subprocess.check_call:
+                print(f'{yellow} Sucessfully Installed TQDM')
+                sucessfull_install.append('TQDM')
+            subprocess.check_call([sys.executable, "-m", "pip", "datetime", datetime])
+            if subprocess.check_call:
+                print(f'{yellow} Sucessfully Installed datetime')
+                sucessfull_install.append('datetime')
+            subprocess.check_call([sys.executable, "-m", "pip", "net-tools", net - tools])
+            if subprocess.check_call:
+                print(f'{yellow} Sucessfully Installed datetime')
+                sucessfull_install.append('net-tools')
+            subprocess.check_call([sys.executable, "-m", "apt install", "airmon-ng", airmon - ng])
+            if subprocess.check_call:
+                print(f'{yellow} Sucessfully Installed airmon-ng')
+                sucessfull_install.append('airmong-ng')
+            print(f'{yellow}**Installed Dependencies {reset}\n{sucessfull_install}')
+
+        except subprocess.CalledPssrocessError as sub0:
+            traceback.print_exc()
+            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub0)}')
+        except subprocess.TimeoutExpired as sub1:
+            traceback.print_exc()
+            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub1)}')
+        except subprocess.SubprocessError as sub2:
+            traceback.print_exc()
+            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub2)}')
+
+    @staticmethod
+    def connect_vpn():
+        print('X' * 50)
+        subprocess.run("auto_vpn.sh")
+        subprocess.run(["sudo", "expressvpn", "connect"],capture_output=True, text=True, check=True)
+        print('X' * 50)
+
+
+    def available_nics(self):
+        try:
+            print('X' * 50)
+            print(f'{yellow} Available  NICS  {reset}')
+            with open("NIC_INFO.txt", 'a') as f:
+                output01 = subprocess.run(["sudo", "lsusb", "-f",], stdin=f,
+                                        capture_output=True, text=True, check=True)
+                print(output01).text
+
+                output02 = subprocess.run(["sudo", "lshw", "-f", "-C", "network" "-short" ], stdin=f,
+                                        capture_output=True, text=True, check=True)
+                print(output02).text
+                time.sleep(2)
+                print('X' * 50)
+                f.close()
+            return output01, output02
+        except subprocess.CalledPssrocessError as sub0:
+            traceback.print_exc()
+            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub0)}')
+        except subprocess.TimeoutExpired as sub1:
+            traceback.print_exc()
+            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub1)}')
+        except subprocess.SubprocessError as sub2:
+            traceback.print_exc()
+            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub2)}')
 
     def interface_info(self):
         print(f'{yellow}**Checking NIC Info {reset}')
-
         with open("NIC_INFO.txt", 'a') as f:
             output = subprocess.run(["sudo", "nmcli", "-f", "SSID,BSSID,DEVICE", "dev", "wifi"], stdin=f,
                                     capture_output=True, text=True, check=True)
@@ -547,6 +566,9 @@ class CHECK_NIC():
 
 
     def nic_status(self):
+        time.sleep(2)
+        print('X' * 50)
+
         print(f'{yellow} Checking General Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
             output = subprocess.run(["sudo", "nmcli", "-f", "general" "status"], stdin=f,
@@ -555,8 +577,13 @@ class CHECK_NIC():
             f.close()
         #output full tree to .XML / do not read to terminal
         subprocess.run(["sudo", "lshw", "-f", "-C", "network" "-xml"]) #  capture_output=True, text=True, check=True)
+        time.sleep(2)
+        print('X' * 50)
+
 
     def check_usbStatus(self):
+        time.sleep(2)
+        print('X' * 50)
         print(f'{yellow}**Checking Radio Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
             output01 = subprocess.run(["sudo","lsusb"], stdin=f, capture_output=True, text=True, check=True)
@@ -564,41 +591,76 @@ class CHECK_NIC():
             output02 = subprocess.run(["sudo","lspci"], stdin=f, capture_output=True, text=True, check=True)
             print(output02)
             f.close()
+            time.sleep(2)
+            print('X' * 50)
 
     def radio_status(self):
+        time.sleep(2)
+        print('X' * 50)
         print(f'{yellow}**Checking Radio Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
             output = subprocess.run(["sudo", "nmcli", "-f", "radio", "all"], stdin=f, capture_output=True, text=True, check=True)
             print(output)
             f.close()
+        time.sleep(2)
+        print('X' * 50)
 
     def get_nic_permissions(self):
+        time.sleep(2)
+        print('X' * 50)
         print(f'{yellow} Reading NIC PERMISSIONS {reset}')
         with open("NIC_INFO.txt", 'a') as f:
             output = subprocess.run(["sudo", "nmcli", "-f", "general", "permissions"], stdin=f, capture_output=True, text=True, check=True)
             print(output)
             f.close()
+        time.sleep(2)
+        print('X' * 50)
 
     def find_signals(self):
+        print('X' * 50)
         print(f'{yellow}  Listening for  current  ESSID/AP Status {reset}')
         print(f'{yellow} Finding A Signal {reset}')
+        time.sleep(7)
+        print('X' * 50)
         with open("AVAIL_SIGNALS.txt", 'a') as f:
+            print('X' * 50)
             output01 = subprocess.Popen(["sudo", "iwlist", "wlan0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(f'{yellow} List of available networks {reset}')
             print(output01)
+            time.sleep(2)
+            print('X' * 50)
 
             output02 = subprocess.Popen(["sudo", "iwlist", "en0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(f'{yellow} List of available networks {reset}')
             print(output02)
+            time.sleep(2)
+            print('X' * 50)
 
             output03 = subprocess.Popen(["sudo", "iwlist", "en0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            time.sleep(2)
+            print('X' * 50)
             print(f'{yellow} List of available networks {reset}')
             print(output03)
+            time.sleep(2)
+            print('X' * 50)
             f.close()
+    @staticmethod
+    def lame_netstat():
+        time.sleep(2)
+        print('X' * 50)
+        print(f'{yellow} Reading NETSTAT on all ports {reset}')
+        with open("NIC_INFO.txt", 'a') as f:
+            output = subprocess.run(["sudo", "netstat", "-f", "-a", "-l"], stdin=f, capture_output=True, text=True, check=True)
+            print(output)
+            f.close()
+        time.sleep(2), print()
+        print('X' * 50)
+        print(f'{yellow} Reading NETSTAT on all ports {reset}')
+        short_output = subprocess.run(["sudo", "netstat", "-f", "-a", "-l"], stdin=f, capture_output=True, text=True, check=True)
+        print(short_output)
 
 
-nic00 = CHECK_NIC()
-nic00.radio_status
+
 
 def arp_scan():
     ip_add_pattern = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
@@ -613,6 +675,8 @@ def arp_scan():
         # sip_add_entered = ip_add_pattern.search(ip_add_entered)
         if ip_add_pattern:
             print(f"{ip_add_entered} is a valid ip address")
+            break
+        else:
             break
     while True:
         print(f"**{yellow}**Enter the port range {reset}\n ")
@@ -869,13 +933,27 @@ except Exception as E:
 current_platform = platform.system()
 platform_name = sys.platform
 while True:
-    if 'Windows' in current_platform:
-        print(f'{red} Your OS {current_platform} || {platform_name} sucks. \n**FUCK-WINDOWS-**{reset}')
+    print(f'{yellow}[CHECKING OS]{reset}')
+    if 'Darwin' in current_platform:
+        print(f'{red} Your OS [{current_platform}] || [{platform_name}] \n* You may run into a few issues-**{reset}')
         period_wait()
-        sys.exit(1)
-    else:
-        print(f'{yellow}**Current Platform{reset}\n{current_platform}')
+        clear()
         break
+    elif 'Windows' in current_platform:
+        print(f'{red} Your OS [{current_platform}] || [{platform_name}] sucks. \n**FUCK-WINDOWS-**{reset}')
+        period_wait()
+        clear()
+        break
+    elif 'Linux' in current_platform or 'Ubuntu' in current_platform or 'Kali' in current_platform:
+        print(f'[DETECTED LINUX]')
+        print(f'{yellow}**Your OS [{current_platform}] || Platform [{platform_name}]')
+        period_wait()
+        clear()
+        break
+
+
+
+
 
 try:  ## (try, except else)
     with Spinner():
@@ -900,62 +978,46 @@ try:  ## (try, except else)
 except Exception as EX:
     print(f'{red}IO ERROR - MUST BE SUPER USER()): {reset}  \n**{EX}')
     sys.exit(1)
-
 else:
     print('X' * 50)
     try:  ## try, else except
+        info = CheckInfo()
         global AVAILABLE_NICS
         AVAILABLE_NICS = []
-
+        #nic00 = interface_all.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
         current_time = time.time()
         clock_time = time.ctime(current_time)
         print(f'{yellow}**Your OS {current_platform} || Platform {platform_name}  \n{clock_time}')
-        if 'linux' in platform_name or 'Linux' in current_platform:
+        print(f'{yellow}[ALL-INTERFACES] {reset}')
+        print(f'{bblue}{info.available_nics}{bblue}')
+        nic = input('**')
+
+        if f'Ubuntu'.lower() in platform_name or f'Ubuntu'.lower() in current_platform:
             print(f'{yellow}**Detected Linux, auto compliling IW-CONFIG. {reset}')
             interface_UBUNTU = re.compile(r"^wlo[0-9]")  ##### UBUNTU
             nic = interface_UBUNTU.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
             AVAILABLE_NICS.append(nic)
+            print(f'Choose The NIC for use: ')
+            nic = input('')
 
         else:
             print('X' * 50)
-            flag00 = True
-            while flag00:  #### ADD VARIOUS REGEXES FOR DIFFERENT OS
-                interface_KALI = re.compile(r'^wlan[0-9]+')  ###### KALI LINUX
-                possible_nic00 = interface_KALI.findall(
-                    subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
-                interface_LINUX = re.compile(r'^wlo[0-9]+')  ##### UBUNTU
-                possible_nic01 = interface_LINUX.findall(
-                    subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
+            print(f'{yellow}**Your OS [{current_platform}] || Platform [{platform_name}]  \n[{clock_time}]')
+            print(f'{yellow}*Your NIC {reset}\n[{nic}]')
+            nic = str(nic)
+            nic = nic.replace("[", "")
+            nic = nic.replace("]", "")
+            nic = nic.replace("'", "")
+            print('String Nic,', nic)
+            print('X' * 50)
+            print(), print()
+            time.sleep(3)
 
-                print(f'{yellow}**Could not auto detect Ubuntu/Kali. {reset}')
-                print(f'{yellow}*{possible_nic00} || {possible_nic01}  {reset}')
-                print(f'{yellow}**Please Enter Your NIC{reset}')
-                nic = input('* ')
-                if len(nic) == 0:
-                    continue
-                elif len(nic) != 0:
-                    AVAILABLE_NICS.append('USER_INPUT: ' + nic)
-                    AVAILABLE_NICS.append('UBUNTU_NIC: ' + str(possible_nic01))
-                    AVAILABLE_NICS.append('KALI_NIC: ' + str(possible_nic00))
-                    print(f'{yellow}**Available Nics: {reset}\n {AVAILABLE_NICS}')
-                    time.sleep(3)
-                    flag00 = False
-                break
+    # except EOFError as EOF:
+    #     traceback.print_exc()
+    #     print(str(EOF))
+    #     print(f'{red}**Error, must have input{reset}')
 
-        print('X' * 50)
-        print(f'{yellow}**Your OS {current_platform} || Platform {platform_name}  \n{clock_time}')
-        print(f'{yellow} :: Your NIC {reset}\n{nic}')
-        nic = str(nic)
-        nic = nic.replace("[", "")
-        nic = nic.replace("]", "")
-        nic = nic.replace("'", "")
-        print('String Nic,', nic)
-        print(), print()
-        time.sleep(1)
-    except EOFError as EOF:
-        traceback.print_exc()
-        print(str(EOF))
-        print(f'{red}**Error, must have input{reset}')
     except Exception as e:
         traceback.print_exc()
         print(str(e))
@@ -971,7 +1033,6 @@ try:
     print(f'{red} Python 3.7.5 + have a bug with this particular class in scapy-- use pyenv 3.7.x to get the ARP scanner.. '
           f'\n the core program will work regardless of scapy. MAKE SURE you are on python 3.9.x not 3.10. \n many of the modules are not supported.{reset} ')
     print('X' * 50)
-
     
     print(f'{yellow} Enter The IP For Port Scanning.. ')
     ip_add_entered = input('** ')
@@ -990,33 +1051,155 @@ except Exception as f:
     traceback.print_exc()
     print(f'{red} --[ERROR IN PORT SCAN]--{reset}\n{str(f)}')
 
-
-
 try:
-
     interface_gateway = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
     default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
     #  default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True, text=True)#.stdout.decode())
     print(f'{yellow}**Available IPs{reset}\n{default_gateway}')
     print(type(default_gateway))
+except Exception as f:
+    traceback.print_exc()
+    print(f'{red} --[ERROR IN INTERACE GATEWAY]--{reset}\n{str(f)}')
 
-    with Spinner():
-        afirm = ['Yes', 'yes', 'y']
-        negat = ['N', 'NO', 'n', 'no']
-        print(f'{yellow} Start [ARP-SCAN] (Y/N)? {reset}')
-        arp = input('** ')
-        if arp in afirm:
-            local_scan = arp_scan()
-            print('X' * 50)
-            print(f'{yellow}**[ARP-CHECK]--{local_scan}{reset}')
-            print(local_scan)
-            print('X' * 50)
-            print()
-            time.sleep(5)
+
+
+else:  # if any garbage is thrown at us
+
+        if path_to_work_in in cwd_ans:
+            print(' Thank you for entering correct path.')
+            break
         else:
-            pass
-except Exception:
-    print(f'{red} --[ERROR IN ARP-SCANNER]-- {reset}')
+            strike_out += 1
+            print(f"**Yet again, invalid input, you have {chances} chances before sys.exit()")
+            print()
+            print('X' * 50)
+            print(
+                f'** Stop messing with me.. {red} type yes for CWD or enter the correct directory. {reset}'), print()
+            if strike_out == 5:
+                print(' You entered too an invalid path too many times, system exiting'), time.sleep(2)
+                sys.exit(0)
+            continue
+
+
+try:
+    print(f'{red}The sys details are saved in cwd')
+    print(f'{bblue}[1]-Install Required Packages\n[2]- Connect Vpn \n[3]Available Nics (PCI or USB) \n -NIC-Status [4]\n[5]-Nic-Details(Verbose')
+    print(f'{bblue}[6]-Radio-Status\n[7]-NIC-Permissions\n[8]-WIFI-SCAN \n[9]-ArpScan\n[10]-Local Port Listener\n[11]-Available Networks')
+
+    info00 = CheckInfo()
+    while True:
+        nic_choice = input()
+        if int(nic_choice) >= 12 or int(nic_choice) <= -1 or int(nic_choice) is str:
+            print(f'{red}**Invalid Selection{reset}')
+            continue
+        if nic_choice == 0:
+            print(f'{yellow}*User Exit, breaking loop{reset}')
+            break
+        elif int(nic_choice) == 1:
+            try:
+                print(f'{yellow}-[Installing Dependancies]{reset}')
+                info00.install()
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red} [Error Installing Dependancies]{reset}')
+
+        elif int(nic_choice) == 2:
+            try:
+                print(f'{yellow}-[Running-VPN-Services]{reset}')
+                info00.connect_vpn()
+            except Exception as e:
+                print(f'{red} [Error-Starting-VPN-Daemon]{reset}\n{str(e)}')
+
+        elif int(nic_choice) == 3:
+            try:
+                print(f'{yellow}-[Available NICS]{reset}')
+                info00.available_nics()
+            except Exception as e:
+                traceback.print_exc()
+
+                print(f'{red} [Error with NIC parsing]{reset}\n{str(e)}')
+
+        elif int(nic_choice) == 4:
+            try:
+                print(f'{yellow}-[NIC-STATUS]{reset}')
+                info00.nic_status()
+            except Exception as e:
+                traceback.print_exc()
+
+                print(f'{red} [Error with NIC parsing]{reset}\n{str(e)}')
+
+        elif int(nic_choice) == 5:
+            try:
+                print(f'{yellow}-[Parsing Verbose Details on NIC]{reset}')
+                info00.interface_info()
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+
+        elif int(nic_choice) == 6:
+            try:
+                print(f'{yellow}-[Radio-Status]{reset}')
+                info00.radio_status()
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+
+        elif int(nic_choice) == 7:
+            try:
+                print(f'{yellow}-[Radio-Status]{reset}')
+                info00.get_nic_permissions()
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+
+        elif int(nic_choice) == 9:
+            try:
+                print(f'{yellow}-[ARP-SCAN]{reset}')
+                ARPscan()
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+
+        elif int(nic_choice) == 10:
+            try:
+                print(f'{yellow}-[Poormans NETSTAT]{reset}')
+                info00.lame_netstat()
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red}[ERROR IN PARSING NETSTAT{reset}')
+
+        elif int(nic_choice) == 11:
+            try:
+                print(f'{yellow}-[Listening For Nearby APs]{reset}')
+                info00.find_signals()
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red} [Error in finding signals {reset}')
+
+except Exception as f:
+    traceback.print_exc()
+    print(f'{red} --[ERROR PROCESSING SUBPROCESS and NIC REQUESTS.]--{reset}\n{str(f)}')
+
+else:
+    try:
+        with Spinner():
+            global afirm, negat
+            afirm = ['Yes', 'yes', 'y']
+            negat = ['N', 'NO', 'n', 'no']
+            print(f'{yellow} Start [ARP-SCAN] (Y/N)? {reset}')
+            arp = input('** ')
+            if arp in afirm:
+                local_scan = arp_scan()
+                print('X' * 50)
+                print(f'{yellow}**[ARP-CHECK]--{local_scan}{reset}')
+                print(local_scan)
+                print('X' * 50)
+                print()
+                time.sleep(5)
+            else:
+                pass
+    except Exception:
+        print(f'{red} --[ERROR IN ARP-SCANNER]-- {reset}')
 
 try:
     with Spinner():
