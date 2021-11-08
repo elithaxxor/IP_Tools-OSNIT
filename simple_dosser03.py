@@ -1,3 +1,8 @@
+## check interface information 
+# check AP's
+# port scan or arp scan 
+# airmon 
+
 import subprocess, re, csv, os, time, shutil, sys, getpass, traceback, platform, time, threading, pprint
 import pathlib, nmap
 from datetime import datetime
