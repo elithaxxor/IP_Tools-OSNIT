@@ -485,28 +485,27 @@ class CheckInfo():
         super(CheckInfo, self).__init__()
         self.nmcli = nmcli
 
-
     @staticmethod
     def install():
         try:
             sucessfull_install = []
-            subprocess.Popen([sys.executable, "-m", "pip3", "install", "threading"])
+            subprocess.Popen([sys.executable, "-m", "pip3", "install", "threading"], stderr=subprocess.STDOUT)
             if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed PIP')
                 sucessfull_install.append('pip')
-            subprocess.Popen([sys.executable, "-m", "tqdm", "install", "tqdm"])
+            subprocess.Popen([sys.executable, "-m", "tqdm", "install", "tqdm"], stderr=subprocess.STDOUT)
             if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed TQDM')
                 sucessfull_install.append('TQDM')
-            subprocess.Popen([sys.executable, "-m", "pip", "datetime", "datetime"])
+            subprocess.Popen([sys.executable, "-m", "pip", "datetime", "datetime"], stderr=subprocess.STDOUT)
             if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed datetime')
                 sucessfull_install.append('datetime')
-            subprocess.Popen([sys.executable, "-m", "pip", "net-tools", "net-tools"])
+            subprocess.Popen([sys.executable, "-m", "pip", "net-tools", "net-tools"],stderr=subprocess.STDOUT)
             if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed datetime')
                 sucessfull_install.append('net-tools')
-            subprocess.Popen([sys.executable, "-m", "apt install", "airmon-ng", "airmon-ng"])
+            subprocess.Popen([sys.executable, "-m", "apt install", "airmon-ng", "airmon-ng"], stderr=subprocess.STDOUT)
             if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed airmon-ng')
                 sucessfull_install.append('airmong-ng')
@@ -526,9 +525,8 @@ class CheckInfo():
     def connect_vpn():
         print('X' * 50)
         subprocess.run("auto_vpn.sh")
-        subprocess.run(["sudo", "expressvpn", "connect"],capture_output=True, text=True, check=True)
+        subprocess.run(["sudo", "expressvpn", "connect"],capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         print('X' * 50)
-
 
     def available_nics(self):
         try:
@@ -536,19 +534,17 @@ class CheckInfo():
             print(f'{yellow} Available  NICS  {reset}')
             with open("NIC_INFO.txt", 'a') as f:
                 output01 = subprocess.run(["sudo", "lsusb", "-f",], stdin=f,
-                                        capture_output=True, text=True, check=True)
-                print(output01).text
+                                        capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                print(output01)
 
                 output02 = subprocess.run(["sudo", "lshw", "-f", "-C", "network" "-short" ], stdin=f,
-                                        capture_output=True, text=True, check=True)
-                print(output02).text
+                                        capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                print(output02)
                 time.sleep(2)
                 print('X' * 50)
                 f.close()
             return output01, output02
-        except subprocess.CalledPssrocessError as sub0:
-            traceback.print_exc()
-            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub0)}')
+
         except subprocess.TimeoutExpired as sub1:
             traceback.print_exc()
             print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub1)}')
@@ -556,11 +552,15 @@ class CheckInfo():
             traceback.print_exc()
             print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub2)}')
 
+        except subprocess.SubprocessError as sub0:
+            traceback.print_exc()
+            print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub0)}')
+
     def interface_info(self):
         print(f'{yellow}**Checking NIC Info {reset}')
         with open("NIC_INFO.txt", 'a') as f:
             output = subprocess.run(["sudo", "nmcli", "-f", "SSID,BSSID,DEVICE", "dev", "wifi"], stdin=f,
-                                    capture_output=True, text=True, check=True)
+                                    capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(output)
             f.close()
 
@@ -572,7 +572,7 @@ class CheckInfo():
         print(f'{yellow} Checking General Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
             output = subprocess.run(["sudo", "nmcli", "-f", "general" "status"], stdin=f,
-                                    capture_output=True, text=True, check=True)
+                                    capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(output)
             f.close()
         #output full tree to .XML / do not read to terminal
@@ -586,9 +586,9 @@ class CheckInfo():
         print('X' * 50)
         print(f'{yellow}**Checking Radio Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output01 = subprocess.run(["sudo","lsusb"], stdin=f, capture_output=True, text=True, check=True)
+            output01 = subprocess.run(["sudo","lsusb"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(output01)
-            output02 = subprocess.run(["sudo","lspci"], stdin=f, capture_output=True, text=True, check=True)
+            output02 = subprocess.run(["sudo","lspci"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(output02)
             f.close()
             time.sleep(2)
@@ -599,7 +599,7 @@ class CheckInfo():
         print('X' * 50)
         print(f'{yellow}**Checking Radio Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output = subprocess.run(["sudo", "nmcli", "-f", "radio", "all"], stdin=f, capture_output=True, text=True, check=True)
+            output = subprocess.run(["sudo", "nmcli", "-f", "radio", "all"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(output)
             f.close()
         time.sleep(2)
@@ -610,7 +610,7 @@ class CheckInfo():
         print('X' * 50)
         print(f'{yellow} Reading NIC PERMISSIONS {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output = subprocess.run(["sudo", "nmcli", "-f", "general", "permissions"], stdin=f, capture_output=True, text=True, check=True)
+            output = subprocess.run(["sudo", "nmcli", "-f", "general", "permissions"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(output)
             f.close()
         time.sleep(2)
