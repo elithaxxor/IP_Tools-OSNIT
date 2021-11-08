@@ -505,19 +505,19 @@ reset = color.reset
 
 
 
-subprocess.run(["cat", "data.txt"], stdout=subprocess.DEVNULL,
-  stderr=subprocess.DEVNULL)
+#subprocess.run(["cat", "data.txt"], stdout=subprocess.DEVNULL,
+ # stderr=subprocess.DEVNULL)
 
 
-args = shlex.split("sudo nmcli -f SSID,BSSID,DEVICE dev wifi")
+#args = shlex.split("sudo nmcli -f SSID,BSSID,DEVICE dev wifi")
 
 import shlex
 ## nmcli check
+
 class CHECK_NIC():
     def __init__(self):
         super(CHECK_NIC, self).__init__()
         self.nmcli = nmcli
-
 
     def available_nics(self):
         print(f'{yellow} Available  NICS  {reset}')
@@ -531,8 +531,6 @@ class CHECK_NIC():
             print(output02)
             f.close()
 
-
-
     def interface_info(self):
         print(f'{yellow}**Checking NIC Info {reset}')
 
@@ -541,7 +539,6 @@ class CHECK_NIC():
                                     capture_output=True, text=True, check=True)
             print(output)
             f.close()
-
 
 
     def nic_status(self):
@@ -577,40 +574,26 @@ class CHECK_NIC():
             print(output)
             f.close()
 
-
     def find_signals(self):
+        print(f'{yellow}  Listening for  current  ESSID/AP Status {reset}')
         print(f'{yellow} Finding A Signal {reset}')
         with open("AVAIL_SIGNALS.txt", 'a') as f:
-            output = subprocess.run(["sudo", "iwconfig", "-f", "wlx0013eff5483f", "permissions"], stdin=f, capture_output=True, text=True, check=True)
-            print(output)
+            output01 = subprocess.Popen(["sudo", "iwlist", "wlan0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print(f'{yellow} List of available networks {reset}')
+            print(output01)
+
+            output02 = subprocess.Popen(["sudo", "iwlist", "en0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print(f'{yellow} List of available networks {reset}')
+            print(output02)
+
+            output03 = subprocess.Popen(["sudo", "iwlist", "en0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print(f'{yellow} List of available networks {reset}')
+            print(output03)
             f.close()
 
 
-
-         | grep - i - -color
-        quality
-
-        print(f'{yellow}  Listneing for  current  ESSID/AP Status {reset}')
-
-
-        print(output)
-
-        nmcli -a -c
-
-
-    print(f'{yellow} List of available networks {reset}')
-    sudo iwlist wlx0013eff5483f scan | grep ESSID
-
-    sudo lsusb
-    sudo iwlist en0 scan | grep ESSID
-
-    nmcli dev wifi
-
-    wlx0013eff5483f
-
-    send scan results to file
-    ask user if they want to read scanned results
-
+nic00 = CHECK_NIC()
+nic00.radio_status
 
 def arp_scan():
     ip_add_pattern = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
