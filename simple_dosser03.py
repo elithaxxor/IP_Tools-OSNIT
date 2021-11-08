@@ -490,29 +490,29 @@ class CheckInfo():
     def install():
         try:
             sucessfull_install = []
-            subprocess.check_call([sys.executable, "-m", "pip", "install", threading])
-            if subprocess.check_call:
+            subprocess.Popen([sys.executable, "-m", "pip3", "install", "threading"])
+            if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed PIP')
                 sucessfull_install.append('pip')
-            subprocess.check_call([sys.executable, "-m", "tqdm", "install", tqdm])
-            if subprocess.check_call:
+            subprocess.Popen([sys.executable, "-m", "tqdm", "install", "tqdm"])
+            if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed TQDM')
                 sucessfull_install.append('TQDM')
-            subprocess.check_call([sys.executable, "-m", "pip", "datetime", datetime])
-            if subprocess.check_call:
+            subprocess.Popen([sys.executable, "-m", "pip", "datetime", "datetime"])
+            if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed datetime')
                 sucessfull_install.append('datetime')
-            subprocess.check_call([sys.executable, "-m", "pip", "net-tools", net - tools])
-            if subprocess.check_call:
+            subprocess.Popen([sys.executable, "-m", "pip", "net-tools", "net-tools"])
+            if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed datetime')
                 sucessfull_install.append('net-tools')
-            subprocess.check_call([sys.executable, "-m", "apt install", "airmon-ng", airmon - ng])
-            if subprocess.check_call:
+            subprocess.Popen([sys.executable, "-m", "apt install", "airmon-ng", "airmon-ng"])
+            if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed airmon-ng')
                 sucessfull_install.append('airmong-ng')
             print(f'{yellow}**Installed Dependencies {reset}\n{sucessfull_install}')
 
-        except subprocess.CalledPssrocessError as sub0:
+        except subprocess.CalledProcessError as sub0:
             traceback.print_exc()
             print(f'{red} SUBPROCESS CALL ERROR {reset}\n{str(sub0)}')
         except subprocess.TimeoutExpired as sub1:
@@ -1033,7 +1033,7 @@ try:
     print(f'{yellow}**Available IPs{reset}')#\n{default_gateway}')
     #    print(type(default_gateway))
 
-    subprocess.check_output("ifconfig en0 | awk '{ print $2}' | grep -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}'", shell=True) ## change shel=True later    #  default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True, text=True)#.stdout.decode())
+    subprocess.check_output("ifconfig wlo1 | awk '{ print $2}' | grep -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}'", shell=True) ## change shel=True later    #  default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True, text=True)#.stdout.decode())
 except Exception as f:
     traceback.print_exc()
     print(f'{red} --[ERROR IN INTERACE GATEWAY]--{reset}\n{str(f)}')
