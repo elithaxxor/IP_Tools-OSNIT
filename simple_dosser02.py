@@ -114,6 +114,65 @@ reset = color.reset
 ############
 
 
+class Colors:
+    reset = "\033[0m"
+
+    # Black
+    fgBlack = "\033[30m"
+    fgBrightBlack = "\033[30;1m"
+    bgBlack = "\033[40m"
+    bgBrightBlack = "\033[40;1m"
+
+    # Red
+    fgRed = "\033[31m"
+    fgBrightRed = "\033[31;1m"
+    bgRed = "\033[41m"
+    bgBrightRed = "\033[41;1m"
+
+    # Green
+    fgGreen = "\033[32m"
+    fgBrightGreen = "\033[32;1m"
+    bgGreen = "\033[42m"
+    bgBrightGreen = "\033[42;1m"
+
+    # Yellow
+    fgYellow = "\033[33m"
+    fgBrightYellow = "\033[33;1m"
+    bgYellow = "\033[43m"
+    bgBrightYellow = "\033[43;1m"
+
+    # Blue
+    fgBlue = "\033[34m"
+    fgBrightBlue = "\033[34;1m"
+    bgBlue = "\033[44m"
+    bgBrightBlue = "\033[44;1m"
+    # Magenta
+    fgMagenta = "\033[35m"
+    fgBrightMagenta = "\033[35;1m"
+    bgMagenta = "\033[45m"
+    bgBrightMagenta = "\033[45;1m"
+    # Cyan
+    fgCyan = "\033[36m"
+    fgBrightCyan = "\033[36;1m"
+    bgCyan = "\033[46m"
+    bgBrightCyan = "\033[46;1m"
+    # White
+    fgWhite = "\033[37m"
+    fgBrightWhite = "\033[37;1m"
+    bgWhite = "\033[47m"
+    bgBrightWhite = "\033[47;1m"
+
+
+###########
+color = Colors()
+yellow = color.fgYellow
+red = color.fgRed
+blue = color.fgBlue
+bblue = color.fgBrightBlue
+cyan = color.fgCyan
+bg_background = color.bgBlack
+reset = color.reset
+
 def display_header():
     # print('*' * 75)
     color_red = Colors()
@@ -217,7 +276,7 @@ import nmap, re, traceback
 from typing import Pattern, Match
 
 
-class Scan:
+class Scan: ## arp scanner -
     def arp(self, ip):
         self.ip = ip
         print(ip)
@@ -227,7 +286,6 @@ class Scan:
         answered, unanswered = scapy.srp(request, timeout=1)
         answered00, unanswered00 = srp(Ether(dst="FF:FF:FF:FF:FF:FF") / ARP(pdst=ip), timeout=1, iface='wlp1s0',
                                        inter=0.1)
-
         print('\tIP\t\t\t\t\tMAC')
         print('_' * 37)
         for i in answered:
@@ -445,65 +503,6 @@ class Scan:
                 print(f"{red}**ERROR IN NMAP SCAN[{port}]{reset}.\n[{e}]")
 
 
-class Colors:
-    reset = "\033[0m"
-
-    # Black
-    fgBlack = "\033[30m"
-    fgBrightBlack = "\033[30;1m"
-    bgBlack = "\033[40m"
-    bgBrightBlack = "\033[40;1m"
-
-    # Red
-    fgRed = "\033[31m"
-    fgBrightRed = "\033[31;1m"
-    bgRed = "\033[41m"
-    bgBrightRed = "\033[41;1m"
-
-    # Green
-    fgGreen = "\033[32m"
-    fgBrightGreen = "\033[32;1m"
-    bgGreen = "\033[42m"
-    bgBrightGreen = "\033[42;1m"
-
-    # Yellow
-    fgYellow = "\033[33m"
-    fgBrightYellow = "\033[33;1m"
-    bgYellow = "\033[43m"
-    bgBrightYellow = "\033[43;1m"
-
-    # Blue
-    fgBlue = "\033[34m"
-    fgBrightBlue = "\033[34;1m"
-    bgBlue = "\033[44m"
-    bgBrightBlue = "\033[44;1m"
-    # Magenta
-    fgMagenta = "\033[35m"
-    fgBrightMagenta = "\033[35;1m"
-    bgMagenta = "\033[45m"
-    bgBrightMagenta = "\033[45;1m"
-    # Cyan
-    fgCyan = "\033[36m"
-    fgBrightCyan = "\033[36;1m"
-    bgCyan = "\033[46m"
-    bgBrightCyan = "\033[46;1m"
-    # White
-    fgWhite = "\033[37m"
-    fgBrightWhite = "\033[37;1m"
-    bgWhite = "\033[47m"
-    bgBrightWhite = "\033[47;1m"
-
-
-###########
-color = Colors()
-yellow = color.fgYellow
-red = color.fgRed
-blue = color.fgBlue
-bblue = color.fgBrightBlue
-cyan = color.fgCyan
-bg_background = color.bgBlack
-reset = color.reset
-
 
 
 
@@ -517,10 +516,11 @@ reset = color.reset
 import shlex
 ## nmcli check
 
-class CHECK_NIC():
+class CheckInfo():
     def __init__(self):
-        super(CHECK_NIC, self).__init__()
+        super(CheckInfo, self).__init__()
         self.nmcli = nmcli
+
 
     @staticmethod
     def connect_vpn():
@@ -528,6 +528,8 @@ class CHECK_NIC():
         subprocess.run("auto_vpn.sh")
         subprocess.run(["sudo", "expressvpn", "connect"],capture_output=True, text=True, check=True)
         print('X' * 50)
+
+
     def available_nics(self):
         print('X' * 50)
         print(f'{yellow} Available  NICS  {reset}')
@@ -633,11 +635,23 @@ class CHECK_NIC():
             time.sleep(2)
             print('X' * 50)
             f.close()
+    @staticmethod
+    def lame_netstat():
+        time.sleep(2)
+        print('X' * 50)
+        print(f'{yellow} Reading NETSTAT on all ports {reset}')
+        with open("NIC_INFO.txt", 'a') as f:
+            output = subprocess.run(["sudo", "netstat", "-f", "-a", "-l"], stdin=f, capture_output=True, text=True, check=True)
+            print(output)
+            f.close()
+        time.sleep(2), print()
+        print('X' * 50)
+        print(f'{yellow} Reading NETSTAT on all ports {reset}')
+        short_output = subprocess.run(["sudo", "netstat", "-f", "-a", "-l"], stdin=f, capture_output=True, text=True, check=True)
+        print(short_output)
 
 
-nic00 = CHECK_NIC()
-message = nic00.radio_status
-print(message)
+
 
 def arp_scan():
     ip_add_pattern = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
@@ -908,13 +922,27 @@ except Exception as E:
 current_platform = platform.system()
 platform_name = sys.platform
 while True:
-    if 'Windows' in current_platform:
-        print(f'{red} Your OS {current_platform} || {platform_name} sucks. \n**FUCK-WINDOWS-**{reset}')
+    print(f'{yellow}[CHECKING OS]{reset}')
+    if 'Darwin' in current_platform:
+        print(f'{red} Your OS [{current_platform}] || [{platform_name}] \n* You may run into a few issues-**{reset}')
         period_wait()
-        sys.exit(1)
-    else:
-        print(f'{yellow}**Current Platform{reset}\n{current_platform}')
+        clear()
         break
+    elif 'Windows' in current_platform:
+        print(f'{red} Your OS [{current_platform}] || [{platform_name}] sucks. \n**FUCK-WINDOWS-**{reset}')
+        period_wait()
+        clear()
+        break
+    elif 'Linux' in current_platform or 'Ubuntu' in current_platform or 'Kali' in current_platform:
+        print(f'[DETECTED LINUX]')
+        print(f'{yellow}**Your OS [{current_platform}] || Platform [{platform_name}]')
+        period_wait()
+        clear()
+        break
+
+
+
+
 
 try:  ## (try, except else)
     with Spinner():
@@ -939,62 +967,66 @@ try:  ## (try, except else)
 except Exception as EX:
     print(f'{red}IO ERROR - MUST BE SUPER USER()): {reset}  \n**{EX}')
     sys.exit(1)
-
 else:
     print('X' * 50)
     try:  ## try, else except
+        info = CheckInfo()
         global AVAILABLE_NICS
         AVAILABLE_NICS = []
-
+        #nic00 = interface_all.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
         current_time = time.time()
         clock_time = time.ctime(current_time)
         print(f'{yellow}**Your OS {current_platform} || Platform {platform_name}  \n{clock_time}')
-        if 'linux' in platform_name or 'Linux' in current_platform:
+        print(f'{yellow}[ALL-INTERFACES] {reset}')
+        print(f'{bblue}{info.available_nics}{bblue}')
+        nic = input('**')
+
+        if f'Ubuntu'.lower() in platform_name or f'Ubuntu'.lower() in current_platform:
             print(f'{yellow}**Detected Linux, auto compliling IW-CONFIG. {reset}')
             interface_UBUNTU = re.compile(r"^wlo[0-9]")  ##### UBUNTU
             nic = interface_UBUNTU.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
             AVAILABLE_NICS.append(nic)
+            print(f'Choose The NIC for use: ')
+            nic = input('')
 
         else:
             print('X' * 50)
             flag00 = True
             while flag00:  #### ADD VARIOUS REGEXES FOR DIFFERENT OS
-                interface_KALI = re.compile(r'^wlan[0-9]+')  ###### KALI LINUX
-                possible_nic00 = interface_KALI.findall(
-                    subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
-                interface_LINUX = re.compile(r'^wlo[0-9]+')  ##### UBUNTU
-                possible_nic01 = interface_LINUX.findall(
-                    subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
+                # interface_KALI = re.compile(r'^wlan[0-9]+')  ###### KALI LINUX
+                # possible_nic00 = interface_KALI.findall(
+                #     subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
+                # interface_LINUX = re.compile(r'^wlo[0-9]+')  ##### UBUNTU
+                # possible_nic01 = interface_LINUX.findall(
+                #     subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
 
                 print(f'{yellow}**Could not auto detect Ubuntu/Kali. {reset}')
-                print(f'{yellow}*{possible_nic00} || {possible_nic01}  {reset}')
+                print(f'{yellow}**Available Nics: {reset}\n {CheckInfo.available_nics}')
                 print(f'{yellow}**Please Enter Your NIC{reset}')
                 nic = input('* ')
                 if len(nic) == 0:
                     continue
                 elif len(nic) != 0:
-                    AVAILABLE_NICS.append('USER_INPUT: ' + nic)
-                    AVAILABLE_NICS.append('UBUNTU_NIC: ' + str(possible_nic01))
-                    AVAILABLE_NICS.append('KALI_NIC: ' + str(possible_nic00))
-                    print(f'{yellow}**Available Nics: {reset}\n {AVAILABLE_NICS}')
                     time.sleep(3)
                     flag00 = False
                 break
 
         print('X' * 50)
-        print(f'{yellow}**Your OS {current_platform} || Platform {platform_name}  \n{clock_time}')
-        print(f'{yellow} :: Your NIC {reset}\n{nic}')
+        print(f'{yellow}**Your OS [{current_platform}] || Platform [{platform_name}]  \n[{clock_time}]')
+        print(f'{yellow}*Your NIC {reset}\n[{nic}]')
         nic = str(nic)
         nic = nic.replace("[", "")
         nic = nic.replace("]", "")
         nic = nic.replace("'", "")
         print('String Nic,', nic)
         print(), print()
-        time.sleep(1)
+        time.sleep(3)
+
     except EOFError as EOF:
         traceback.print_exc()
         print(str(EOF))
         print(f'{red}**Error, must have input{reset}')
+
     except Exception as e:
         traceback.print_exc()
         print(str(e))
@@ -1010,7 +1042,6 @@ try:
     print(f'{red} Python 3.7.5 + have a bug with this particular class in scapy-- use pyenv 3.7.x to get the ARP scanner.. '
           f'\n the core program will work regardless of scapy. MAKE SURE you are on python 3.9.x not 3.10. \n many of the modules are not supported.{reset} ')
     print('X' * 50)
-
     
     print(f'{yellow} Enter The IP For Port Scanning.. ')
     ip_add_entered = input('** ')
@@ -1321,3 +1352,4 @@ except Exception as final_error:
     traceback.print_exc()
     print(f'{red}**{str(final_error)}.{reset}')
 
+#
