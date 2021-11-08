@@ -1029,56 +1029,14 @@ else:
 
 
 try:
-    print('X' * 50)
-    print(f'{red} Python 3.7.5 + have a bug with this particular class in scapy-- use pyenv 3.7.x to get the ARP scanner.. '
-          f'\n the core program will work regardless of scapy. MAKE SURE you are on python 3.9.x not 3.10. \n many of the modules are not supported.{reset} ')
-    print('X' * 50)
-    
-    print(f'{yellow} Enter The IP For Port Scanning.. ')
-    ip_add_entered = input('** ')
-    arp_str = str(ip_add_entered) + str("/24")
-    print(f'{yellow} IP + Subnet \n.. {reset} {arp_str}')
-    scanner = Scan()  # create an instance of the class
-    scanner.arp(arp_str)  # call the method
-    #ip = input('** ')
-    port_results = scanner.port_scan(ip_add_entered)
-    print('X' * 50)
-    print(f'{yellow} ARP-SCAN COMPLETE')
-    print(port_results)
-    time.sleep(8)
-
-except Exception as f:
-    traceback.print_exc()
-    print(f'{red} --[ERROR IN PORT SCAN]--{reset}\n{str(f)}')
-
-try:
     interface_gateway = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
-    default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True).stdout.decode())
-    #  default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True, text=True)#.stdout.decode())
-    print(f'{yellow}**Available IPs{reset}\n{default_gateway}')
-    print(type(default_gateway))
+    print(f'{yellow}**Available IPs{reset}')#\n{default_gateway}')
+    #    print(type(default_gateway))
+
+    subprocess.check_output("ifconfig en0 | awk '{ print $2}' | grep -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}'", shell=True) ## change shel=True later    #  default_gateway = interface_gateway.findall(subprocess.run(['iwconfig'], capture_output=True, text=True)#.stdout.decode())
 except Exception as f:
     traceback.print_exc()
     print(f'{red} --[ERROR IN INTERACE GATEWAY]--{reset}\n{str(f)}')
-
-
-
-else:  # if any garbage is thrown at us
-
-        if path_to_work_in in cwd_ans:
-            print(' Thank you for entering correct path.')
-            break
-        else:
-            strike_out += 1
-            print(f"**Yet again, invalid input, you have {chances} chances before sys.exit()")
-            print()
-            print('X' * 50)
-            print(
-                f'** Stop messing with me.. {red} type yes for CWD or enter the correct directory. {reset}'), print()
-            if strike_out == 5:
-                print(' You entered too an invalid path too many times, system exiting'), time.sleep(2)
-                sys.exit(0)
-            continue
 
 
 try:
