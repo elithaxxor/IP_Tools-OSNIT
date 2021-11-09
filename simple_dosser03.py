@@ -525,7 +525,7 @@ class CheckInfo():
     def connect_vpn():
         print('X' * 50)
         subprocess.run("auto_vpn.sh")
-        subprocess.run(["sudo", "expressvpn", "connect"],capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        subprocess.run(["sudo", "expressvpn", "connect"],text=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print('X' * 50)
 
     def available_nics(self):
@@ -533,12 +533,12 @@ class CheckInfo():
             print('X' * 50)
             print(f'{yellow} Available  NICS  {reset}')
             with open("NIC_INFO.txt", 'a') as f:
-                output01 = subprocess.run(["sudo", "lsusb", "-f",], stdin=f,
-                                        capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                output01 = subprocess.run(["sudo", "lsusb", "-v",], stdin=f,
+                                         text=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 print(output01)
 
-                output02 = subprocess.run(["sudo", "lshw", "-f", "-C", "network" "-short" ], stdin=f,
-                                        capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                output02 = subprocess.run(["sudo", "lshw", "-C", "network" "-short" ], stdin=f,
+                                        text=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 print(output02)
                 time.sleep(2)
                 print('X' * 50)
@@ -559,8 +559,8 @@ class CheckInfo():
     def interface_info(self):
         print(f'{yellow}**Checking NIC Info {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output = subprocess.run(["sudo", "nmcli", "-f", "SSID,BSSID,DEVICE", "dev", "wifi"], stdin=f,
-                                    capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            output = subprocess.run(["sudo", "nmcli", "SSID,BSSID,DEVICE", "dev", "wifi"], stdin=f,
+                                    text=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(output)
             f.close()
 
@@ -571,12 +571,12 @@ class CheckInfo():
 
         print(f'{yellow} Checking General Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output = subprocess.run(["sudo", "nmcli", "-f", "general" "status"], stdin=f,
-                                    capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            output = subprocess.run(["sudo", "nmcli", "general" "status"], stdin=f,
+                                    text=True, check=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(output)
             f.close()
         #output full tree to .XML / do not read to terminal
-        subprocess.run(["sudo", "lshw", "-f", "-C", "network" "-xml"]) #  capture_output=True, text=True, check=True)
+        subprocess.run(["sudo", "lshw", "-C", "network" "-xml"]) #  capture_output=True, text=True, check=True)
         time.sleep(2)
         print('X' * 50)
 
@@ -586,9 +586,9 @@ class CheckInfo():
         print('X' * 50)
         print(f'{yellow}**Checking Radio Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output01 = subprocess.run(["sudo","lsusb"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            output01 = subprocess.run(["sudo","lsusb"], stdin=f, text=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(output01)
-            output02 = subprocess.run(["sudo","lspci"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            output02 = subprocess.run(["sudo","lspci"], stdin=f,text=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(output02)
             f.close()
             time.sleep(2)
@@ -599,18 +599,18 @@ class CheckInfo():
         print('X' * 50)
         print(f'{yellow}**Checking Radio Status {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output = subprocess.run(["sudo", "nmcli", "-f", "radio", "all"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            output = subprocess.run(["sudo", "nmcli", "radio", "all"], stdin=f, text=True, check=True,  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(output)
             f.close()
-        time.sleep(2)
-        print('X' * 50)
+            time.sleep(2)
+            print('X' * 50)
 
     def get_nic_permissions(self):
         time.sleep(2)
         print('X' * 50)
         print(f'{yellow} Reading NIC PERMISSIONS {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output = subprocess.run(["sudo", "nmcli", "-f", "general", "permissions"], stdin=f, capture_output=True, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            output = subprocess.run(["sudo", "nmcli", "general", "permissions"], stdin=f, text=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(output)
             f.close()
         time.sleep(2)
@@ -624,19 +624,19 @@ class CheckInfo():
         print('X' * 50)
         with open("AVAIL_SIGNALS.txt", 'a') as f:
             print('X' * 50)
-            output01 = subprocess.Popen(["sudo", "iwlist", "wlan0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output01 = subprocess.Popen(["sudo", "iwlist", "wlo1", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(f'{yellow} List of available networks {reset}')
             print(output01)
             time.sleep(2)
             print('X' * 50)
 
-            output02 = subprocess.Popen(["sudo", "iwlist", "en0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output02 = subprocess.Popen(["sudo", "iwlist", "wlx0013eff5483f", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(f'{yellow} List of available networks {reset}')
             print(output02)
             time.sleep(2)
             print('X' * 50)
 
-            output03 = subprocess.Popen(["sudo", "iwlist", "en0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output03 = subprocess.Popen(["sudo", "iwlist", "wlan0", "scan", "grep" "ESSID"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             time.sleep(2)
             print('X' * 50)
             print(f'{yellow} List of available networks {reset}')
@@ -650,14 +650,16 @@ class CheckInfo():
         print('X' * 50)
         print(f'{yellow} Reading NETSTAT on all ports {reset}')
         with open("NIC_INFO.txt", 'a') as f:
-            output = subprocess.run(["sudo", "netstat", "-f", "-a", "-l"], stdin=f, capture_output=True, text=True, check=True)
+            output = subprocess.run(["sudo", "netstat",  "-a", "-l"], stdin=f, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
             print(output)
             f.close()
         time.sleep(2), print()
         print('X' * 50)
         print(f'{yellow} Reading NETSTAT on all ports {reset}')
-        short_output = subprocess.run(["sudo", "netstat", "-f", "-a", "-l"], stdin=f, capture_output=True, text=True, check=True)
+        short_output = subprocess.run(["sudo", "netstat",  "-a", "-l"], stdin=f,  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
         print(short_output)
+
+
 
 
 
@@ -1045,6 +1047,7 @@ try:
     print(f'{bblue}[6]-Radio-Status\n[7]-NIC-Permissions\n[8]-WIFI-SCAN \n[9]-ArpScan\n[10]-Local Port Listener\n[11]-Available Networks')
 
     info00 = CheckInfo()
+    break_loop = ["exit","e","E","EXIT","Exit","q","Q","QUIT"]
     while True:
         nic_choice = input()
         if int(nic_choice) >= 12 or int(nic_choice) <= -1 or int(nic_choice) is str:
@@ -1060,6 +1063,7 @@ try:
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error Installing Dependancies]{reset}')
+                continue
 
         elif int(nic_choice) == 2:
             try:
@@ -1067,6 +1071,8 @@ try:
                 info00.connect_vpn()
             except Exception as e:
                 print(f'{red} [Error-Starting-VPN-Daemon]{reset}\n{str(e)}')
+                continue
+
 
         elif int(nic_choice) == 3:
             try:
@@ -1074,8 +1080,9 @@ try:
                 info00.available_nics()
             except Exception as e:
                 traceback.print_exc()
-
                 print(f'{red} [Error with NIC parsing]{reset}\n{str(e)}')
+                continue
+
 
         elif int(nic_choice) == 4:
             try:
@@ -1083,8 +1090,9 @@ try:
                 info00.nic_status()
             except Exception as e:
                 traceback.print_exc()
-
                 print(f'{red} [Error with NIC parsing]{reset}\n{str(e)}')
+                continue
+
 
         elif int(nic_choice) == 5:
             try:
@@ -1093,6 +1101,8 @@ try:
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+                continue
+
 
         elif int(nic_choice) == 6:
             try:
@@ -1101,6 +1111,8 @@ try:
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+                continue
+
 
         elif int(nic_choice) == 7:
             try:
@@ -1109,6 +1121,8 @@ try:
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+                continue
+
 
         elif int(nic_choice) == 9:
             try:
@@ -1117,6 +1131,8 @@ try:
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+                continue
+
 
         elif int(nic_choice) == 10:
             try:
@@ -1125,6 +1141,7 @@ try:
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red}[ERROR IN PARSING NETSTAT{reset}')
+                continue
 
         elif int(nic_choice) == 11:
             try:
@@ -1133,6 +1150,10 @@ try:
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in finding signals {reset}')
+                continue
+
+        elif nic_choice == 15 or nic_choice in break_loop:
+            break
 
 except Exception as f:
     traceback.print_exc()
@@ -1305,18 +1326,24 @@ try:
                 time.sleep(.1)
                 pprint.pprint(start)
                 print(f'{start}')
-            else:
-                print(f'{red}**[MONITORED-MODE-FAILED]{reset}')
 
-            ######### START SEQUENCE FOR DISCOVER AP #######
-            print(f'{yellow}**[--INITIATING DISCOVER_AP SEQUENCEE--]{reset}')
-            time.sleep(3)
-            discover_ap = subprocess.Popen(
-                ['sudo', 'airodump-ng', '-w', 'file', '--write-interval', '1', '--output-format', 'csv',
-                 nic + 'mon'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
-            if discover_ap:
-                print(f'**{yellow}**[DISCOVERED AP]** {reset}')
-                time.sleep(.1)
+                #def mon():
+                try:
+                    while True:
+                        ######### START SEQUENCE FOR DISCOVER AP #######
+                        print(f'{yellow}**[--INITIATING DISCOVER_AP SEQUENCEE--]{reset}')
+                        time.sleep(3)
+                        discover_ap = subprocess.Popen(
+                            ['sudo', 'airodump-ng', '-w', 'file', '--write-interval', '1', '--output-format', 'csv',
+                             nic + 'mon'], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+                        if discover_ap:
+                            print(f'**{yellow}**[DISCOVERED AP]** {reset}')
+                            time.sleep(.1)
+                except KeyboardInterrupt as Keyboard:  ### keyboard interupt --> disable monitormode
+                    print(f'\n{red}[SYSTEM] USER EXIT\n Keyboard.{reset}')
+                    traceback.print_exc()
+                    pprint.pprint(ACTIVE_NETWORKS)
+                    #pass
 
             ##########################################################################
             for root, dirs, file in os.walk(cwd):
@@ -1325,20 +1352,21 @@ try:
                     time.sleep(1)
                     break
                 elif "attack.csv" not in file or 'attack.csv' not in dirs:
-                    print(f'{red}** Did not file a old .csv , searching for one.. {reset}')
+                    print(f'{red}** Did not find a old .csv , creating a one.. {reset}')
                     csv_loc = cwd + 'attack.csv'
-                    file00 = open('attack.csv', 'w')
+                    attack_csv = f'attack.csv + {timestamp}'
+                    file00 = open('attack_csv', 'a')
                     file00.close()
-                    if file00 is 'attack.csv':
+                    if file00 is attack_csv:
                         print(f'{yellow}**The .csv is in: {reset} \n*{csv_loc}')
                         time.sleep(2)
                         file00.close()
                         break
 
-            if os.path.isfile('attack.csv'):
+            if os.path.isfile(attack_csv):
                 print(f'{yellow}**[--FOUND ATTACK.CSV--]{reset}')
                 time.sleep(.5)
-                with open('attack.csv') as csv_h:  # in os.listdir(cwd) as csv_h:
+                with open(attack_csv) as csv_h:  # in os.listdir(cwd) as csv_h:
                     params = ['BSSID', 'First_time_seen', 'Last_time_seen', 'channel', 'Speed', 'Privacy', 'Cipher',
                               'Authentication', 'Power', 'beacons', 'IV', 'LAN_IP', 'ID_length', 'ESSID', 'key']
 
