@@ -15,6 +15,7 @@ import scapy.all as scapy
 import nmap, re, traceback
 from typing import Pattern, Match
 import nmcli
+from pprint import pprint
 
 from os import devnull
 
@@ -501,7 +502,7 @@ class CheckInfo():
             if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed datetime')
                 sucessfull_install.append('datetime')
-            subprocess.Popen([sys.executable, "-m", "pip", "net-tools", "net-tools"],stderr=subprocess.STDOUT)
+            subprocess.Popen([sys.executable, "-m", "pip3", "net-tools", "net-tools"],stderr=subprocess.STDOUT)
             if subprocess.Popen:
                 print(f'{yellow} Sucessfully Installed datetime')
                 sucessfull_install.append('net-tools')
@@ -543,7 +544,7 @@ class CheckInfo():
                 time.sleep(2)
                 print('X' * 50)
                 f.close()
-            return output01, output02
+            print(output01, output02)
 
         except subprocess.TimeoutExpired as sub1:
             traceback.print_exc()
@@ -561,7 +562,7 @@ class CheckInfo():
         with open("NIC_INFO.txt", 'a') as f:
             output = subprocess.run(["sudo", "nmcli", "SSID,BSSID,DEVICE", "dev", "wifi"], stdin=f,
                                     text=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print(output)
+            pprint.pprint(output)
             f.close()
 
 
@@ -604,6 +605,10 @@ class CheckInfo():
             f.close()
             time.sleep(2)
             print('X' * 50)
+        if f:
+            return f'{yellow}**Sucessfully Parsed Radio Status{reset}'
+        else:
+            return f'{red}**Did not parse Radio Status Successfully {reset}'
 
     def get_nic_permissions(self):
         time.sleep(2)
@@ -615,6 +620,11 @@ class CheckInfo():
             f.close()
         time.sleep(2)
         print('X' * 50)
+        if f:
+            return f'{yellow}**Sucessfully Parsed NIC Permissions {reset}'
+        else:
+            return f'{red}**Did not parse Radio Permissions Successfully {reset}'
+
 
     def find_signals(self):
         print('X' * 50)
@@ -644,6 +654,11 @@ class CheckInfo():
             time.sleep(2)
             print('X' * 50)
             f.close()
+            if f:
+                return f'{yellow}**Sucessfully Parsed [FIND-SIGNALS]  {reset}'
+            else:
+                return f'{red}**Did not parse [FIND-SIGNALS] Successfully {reset}'
+
     @staticmethod
     def lame_netstat():
         time.sleep(2)
@@ -1031,6 +1046,9 @@ else:
 
 
 try:
+    global available_ips
+    available_ips = []
+
     interface_gateway = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
     print(f'{yellow}**Available IPs{reset}')#\n{default_gateway}')
     #    print(type(default_gateway))
@@ -1107,7 +1125,8 @@ try:
         elif int(nic_choice) == 6:
             try:
                 print(f'{yellow}-[Radio-Status]{reset}')
-                info00.radio_status()
+                radio_parsed = info00.radio_status()
+                print(radio_parsed)
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
@@ -1116,12 +1135,29 @@ try:
 
         elif int(nic_choice) == 7:
             try:
-                print(f'{yellow}-[Radio-Status]{reset}')
-                info00.get_nic_permissions()
+                print(f'{yellow}-[PERMISSIONS]{reset}')
+                parsed_permissions = info00.get_nic_permissions()
+                print(parsed_permissions)
+                continue
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
                 continue
+
+        elif int(nic_choice) == 8:
+            try:
+                print(f'{yellow}-[WIFI-SCAN]{reset}')
+                parsed_scanner = info00.get_nic_permissions()
+                print(parsed_scanner)
+            except Exception as e:
+                traceback.print_exc()
+                print(f'{red} [Error in parsing Verbose NIC Details]{reset}\n{str(e)}')
+                continue
+
+
+
+
+
 
 
         elif int(nic_choice) == 9:
@@ -1146,7 +1182,9 @@ try:
         elif int(nic_choice) == 11:
             try:
                 print(f'{yellow}-[Listening For Nearby APs]{reset}')
-                info00.find_signals()
+                parsed_signals = info00.find_signals()
+                print(parsed_signals)
+
             except Exception as e:
                 traceback.print_exc()
                 print(f'{red} [Error in finding signals {reset}')
@@ -1154,6 +1192,9 @@ try:
 
         elif nic_choice == 15 or nic_choice in break_loop:
             break
+            
+except KeyboardInterrupt:
+    print(f'{red}[KEYWORD INTERUPT BY USER{reset}]')
 
 except Exception as f:
     traceback.print_exc()
@@ -1353,6 +1394,7 @@ try:
                     break
                 elif "attack.csv" not in file or 'attack.csv' not in dirs:
                     print(f'{red}** Did not find a old .csv , creating a one.. {reset}')
+                    timestamp = str(datetime.now())
                     csv_loc = cwd + 'attack.csv'
                     attack_csv = f'attack.csv + {timestamp}'
                     file00 = open('attack_csv', 'a')
