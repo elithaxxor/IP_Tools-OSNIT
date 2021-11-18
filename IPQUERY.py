@@ -2,7 +2,7 @@ from geolite2 import geolite2
 import requests
 import csv
 
-
+##  pip3 install maxminddb && pip3 install maxminddb-geolite2      
 def get_ip_location(SELF_IP):
     reader = geolite2.reader()
     location = reader.get(SELF_IP) ## initiate reader, t get
