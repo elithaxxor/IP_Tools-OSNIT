@@ -7,6 +7,7 @@ import pathlib, nmap
 from datetime import datetime
 from subprocess import Popen, call, PIPE
 import IPCHECKER as IPx
+import IPQUERY as IPq
 from tqdm import tqdm
 from getpass import getpass
 import time
