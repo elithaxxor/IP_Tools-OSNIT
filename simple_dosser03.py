@@ -905,44 +905,39 @@ def check_wifi(ssid, list):
 
 
 try:
-    print(IPx.get_ip)
-    # print(f'\033[;35;47m \t\t[{IPx.get_ip()}]  ...? \033[0m 0;35;47m')
-    width = os.get_terminal_size().columns  # set the width to center goods
     terminal = os.environ.get('TERM')
-    width_len = width
-    cwd = os.getcwd()
-    #  IP_INFO = f"\033[1;35;0m {IPx.IP}"
-    IP = IPx.get_ip
+        width_len = width
+        cwd = os.getcwd()
+        #  IP_INFO = f"\033[1;35;0m {IPx.IP}"
+        current_version = platform.release()
+        system_info = platform.platform()
+        os_name0 = platform.system()
+        current_platform = platform.system()
+        platform_name = sys.platform
+        ## new adds
+        big_names = platform.uname()
+        processor = platform.processor()
+        architecture = platform.architecture()
+        user_id = os.uname()
+        login = os.getlogin()
 
-    current_version = platform.release()
-    system_info = platform.platform()
-    os_name0 = platform.system()
-
-    ## new adds
-    big_names = platform.uname()
-    processor = platform.processor()
-    architecture = platform.architecture()
-    user_id = os.uname()
-    login = os.getlogin()
-
-    display_header()
-    print(), print()
-    print('X' * 150)
-    print('X' * 150)
-    print()
-    print(f'SYSTEM INFO'.center(width))  ### IP_INFO Is disabled due to .API usage limit.
-    print(f'\033[1;35;m [{current_version}]  ...? '.center(width))
-    print(f'\033[1;35;m [{os_name0}] + [{terminal}] ...? '.center(width))
-    print(f'\033[1;35;m [{system_info}]  ...? '.center(width))
-    print(f'\033[1;35;0m [{current_version}]  ...? '.center(width))  ### ADDD YOUR IP
-    print(f'\033[1;35;0m [{IP}]  ...? '.center(width))  ### ADDD YOUR IP
-    print(f'\033[1;35;0m [{big_names}]  ...? '.center(width))  ### ADDD YOUR IP
-    print(f'\033[1;35;0m [{processor}]  ...? '.center(width))  ### ADDD YOUR IP
-    print(f'\033[1;35;0m [{architecture}]  ...? '.center(width))  ###
-    print(f'\033[1;35;0m [{user_id}]  ...? '.center(width))  ###
-    print(f'\033[1;35;0m [{login}]  ...? '.center(width))  ###
-    print(f'\033[1;35;0m [{current_version}]  ...? '.center(width))  ### ADDD YOUR IP
-    # print(f'\033[1;35;0m [{IP_INFO}]  ...? '.center(width))  ### ADDD YOUR IP
+        print()
+        print('X'*50)
+        print(f'**[SYSTEM INFO]**'.center(width))
+        print()
+        print(f'\033[1;35;m [CURRENT_PLATFORM]--[{current_platform}]  ...? '.center(width))
+        print(f'\033[1;35;m [PLATFORM_NAME]--[{platform_name}]  ...? '.center(width))
+        print(f'\033[1;35;m [CURRENT_VERSION]--[{current_version}]  ...? '.center(width))
+        print(f'\033[1;35;m [OS-NAME]--[{os_name0}] + [{terminal}] ...? '.center(width))
+        print(f'\033[1;35;m [SYSTEM-INFO]--[{system_info}]  ...? '.center(width))
+        print(f'\033[1;35;0m [CURRENT-VERSION]--[{current_version}]  ...? '.center(width))
+        print(f'\033[1;35;0m [UUID]--[{big_names}]  ...? '.center(width))
+        print(f'\033[1;35;0m [PROCESSOR]--[{processor}]  ...? '.center(width))
+        print(f'\033[1;35;0m [ARCHITECTURE]--[{architecture}]  ...? '.center(width))
+        print(f'\033[1;35;0m [USER-ID]--[{user_id}]  ...? '.center(width))
+        print(f'\033[1;35;0m [LOGIN]--[{login}]  ...? '.center(width))
+        print('X'*50)
+        
 
 except Exception as E:
     traceback.print_exc()
