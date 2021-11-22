@@ -1,28 +1,22 @@
+import socket
 
-from socket import *
+## The Client
+print(f'[+] Address: ')
+IP = input('')
+PORT = 80
+clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+clientSocket.connect((IP, PORT))
+cmd = "GET f'{IP}'\r\n\r\n".encode() ## change \r\n to headers later".encode()
+clientSocket.send(cmd)
 
-PORT = 9000
-def webServer()
-    serverSocket = socket(AF_INET, SOCK_STREAM)
-    try:
-        serverSocket.bind(('localhost', PORT))
-        serverSocket.listen(5)
-        while(1):
-            (client_socket,address) = serverSocket.accept()
-            client_sent = clientsocket.recv(5000).decode()
-            pieces =client_sent.split('\n')
-            if (len(piece) > 0):
-                print(pieces)
-            # data = "1.1200 OK\r\n"
-            # data += "Content-Type: text/html; charset=utf-8
-            # data += '\r\n'
-            data = f"1.1200 OK\r\n" + f"Content-Type: text/html; charset=utf-8\r\n" + f'\r\n'
-            client_socket.sendall(data.encode())
-            client_socket.sutdown(SHUT_WR)
 
-    except KeyboardInterrupt as e:
-        print('[+] End-User initiated shutdown.')
-    except Exception as e:
-        print(str(e))
+while True:
+    clientData = clientSocket.recv(512)
+    if len(clientData) < 1:
+        break
+    print(clientData.decode(), end='')
+
+clientSocket.close()
+
 
 
