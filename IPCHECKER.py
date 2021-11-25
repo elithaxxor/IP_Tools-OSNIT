@@ -51,5 +51,11 @@ print('Famished')
 print(get_info)
 
 
-#
+
+# https://developers.google.com/maps/documentation/places/web-service/search-text
+
+# https://maps.googleapis.com/maps/api/place/textsearch/json
+#   ?query=123%20main%20street
+#   &key=YOUR_API_KEY
+# #
 #
