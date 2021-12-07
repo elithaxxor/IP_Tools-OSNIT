@@ -1,4 +1,7 @@
 import socket
+import hmtl.parser import HTMLParser 
+
+
 
 ## The Client
 class WebBrowserC:
