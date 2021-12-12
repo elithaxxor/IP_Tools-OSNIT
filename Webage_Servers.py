@@ -17,6 +17,11 @@ def webServer()
             # data += '\r\n'
             data = f"1.1200 OK\r\n" + f"Content-Type: text/html; charset=utf-8\r\n" + f'\r\n'
             client_socket.sendall(data.encode())
+            client_socket.send(b"\r\n") #binary for line down 
+            client_socket.send(b"-------- TEST SERVER ---------") #binary for line down 
+            client_socket.send(b"\r\n") #binary for line down 
+
+            
             client_socket.sutdown(SHUT_WR)
 
     except KeyboardInterrupt as e:
