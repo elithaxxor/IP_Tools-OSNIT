@@ -18,8 +18,6 @@ class hashVerify():
         #self.hash_toVerify=self.hash_toVerify.encode()
         self.hash_toVerify = str.encode(self.hash_toVerify)
 
-
-
     def verify_hash(self):
         print(f'[+] [Verifying -- byte format] :: \n \t\t[+]**[{self.hash_toVerify}]')
         print(f'\n{"X"*50} [+] List of Hashes to be Verified: \n \t\t[+]**[{self.hash_list}]')
@@ -52,18 +50,19 @@ class hashVerify():
 
 class makeHash():
     def __init__(self):
-        self.hash_list = ["md5", "sha1", "sha224", "sha256", "sha384", "sha512"]
-        self.md5 = hashlib.md5()
-        self.sha1 = hashlib.sha1()
-        self.sha224 = hashlib.sha224()
-        self.sha256 = hashlib.sha256()
-        self.sha384 = hashlib.sha384()
-        self.sha512 = hashlib.sha512()
-        print(f'[+] Enter the dir for hash verification ')
-        self.path = input(r'')
-        #self.path = self.path.encode()
+        super(makeHash, self).__init__(self)
+            self.hash_list = ["md5", "sha1", "sha224", "sha256", "sha384", "sha512"]
+            self.md5 = hashlib.md5()
+            self.sha1 = hashlib.sha1()
+            self.sha224 = hashlib.sha224()
+            self.sha256 = hashlib.sha256()
+            self.sha384 = hashlib.sha384()
+            self.sha512 = hashlib.sha512()
+            print(f'[+] Enter the dir for hash verification ')
+            self.path = input(r'')
+            #self.path = self.path.encode()
 
-        self.path = str.encode(self.path)
+            self.path = str.encode(self.path)
 
     #  self.h = getattr(hashlib, self.path)
 
