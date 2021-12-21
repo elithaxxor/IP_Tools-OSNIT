@@ -155,7 +155,12 @@ tracky = f'https://tracky.com/user/~{USERNAME}'
 # BASECAMP
 basecamp = f'https://{USERNAME}.basecamphq.com/login'
 #
+pornhub_premium = f'https://www.pornhubpremium.com/users/{USERNAME}'
+#
+pornhub = f'https://www.pornhubpremium.com/users/{USERNAME}/'
 ''' WEBSITE LIST - USE FOR SEARCHING OF USERNAME '''
+
+only fans = "https://onlyfans.com/{USERNAME }"
 
 WEBSITES = [
 instagram, facebook, twitter, youtube, blogger, google_plus, reddit,
