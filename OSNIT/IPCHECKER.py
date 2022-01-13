@@ -16,7 +16,7 @@ class Get_IP():
 
     def Get_ip(self):
         SELF_IP = requests.get('https://api.ipify.org').text  # api to pull self ip via text
-        #SELF_IP = ('76.172.85.231')  # api to pull self ip via text
+        #SELF_IP = ('76.17XXXXXX')  # api to pull self ip via text
         REQ00 = f"http://api.ipapi.com/{SELF_IP}?access_key=4c30512e8afe7d0a27c11e5deb4fce34"
         REQ = requests.get(REQ00).text
         res = json.loads(REQ), print(), print()
